@@ -88,4 +88,10 @@ std::vector<const Resource*> Catalog::searchTitle(const std::string& text) const
     });
 }
 
+std::vector<const Resource*> Catalog::byPriceRange(Money minPrice, Money maxPrice) const {
+    return where([minPrice, maxPrice](const Resource& r) {
+        return r.unitPrice() >= minPrice && r.unitPrice() <= maxPrice;
+    });
+}
+
 }  // namespace bookmgmt

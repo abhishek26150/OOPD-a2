@@ -236,6 +236,7 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: /workspaces/OOPD-a2/tests/t
   /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
   /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h \
   /workspaces/OOPD-a2/include/bookmgmt/Acquisition.h \
+  /workspaces/OOPD-a2/include/bookmgmt/AudioBook.h \
   /workspaces/OOPD-a2/include/bookmgmt/Book.h \
   /workspaces/OOPD-a2/include/bookmgmt/Budget.h \
   /workspaces/OOPD-a2/include/bookmgmt/Catalog.h \
@@ -245,6 +246,7 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: /workspaces/OOPD-a2/tests/t
   /workspaces/OOPD-a2/include/bookmgmt/Journal.h \
   /workspaces/OOPD-a2/include/bookmgmt/Money.h \
   /workspaces/OOPD-a2/include/bookmgmt/Resource.h \
+  /workspaces/OOPD-a2/include/bookmgmt/Thesis.h \
   /workspaces/OOPD-a2/include/bookmgmt/bookmgmt.h
 
 
@@ -444,6 +446,8 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: /workspaces/OOPD-a2/tests/t
 
 /usr/include/c++/13/bits/functional_hash.h:
 
+/workspaces/OOPD-a2/include/bookmgmt/Thesis.h:
+
 /usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 
 /usr/include/c++/13/bits/shared_ptr.h:
@@ -487,6 +491,8 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: /workspaces/OOPD-a2/tests/t
 /usr/include/c++/13/bits/string_view.tcc:
 
 /usr/include/c++/13/backward/binders.h:
+
+/workspaces/OOPD-a2/include/bookmgmt/AudioBook.h:
 
 /usr/include/c++/13/bits/uniform_int_dist.h:
 

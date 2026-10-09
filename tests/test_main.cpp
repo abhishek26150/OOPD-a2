@@ -245,6 +245,31 @@ void test_question_3_audiobook_and_thesis() {
 }
 
 
+void test_question_4_catalog_queries() {
+    using namespace bookmgmt;
+
+    Catalog cat;
+    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Robert Martin"}, "123", "Prentice", 2008, Money::of(450), 400);
+    cat.emplace<Book>("B02", "Code Complete", std::vector<std::string>{"Steve McConnell"}, "456", "Microsoft", 2004, Money::of(600), 900);
+    cat.emplace<Thesis>("TH01", "Systems Design", "Alice", "Dr. Bob", "IIIT", "Ph.D.", 2023, Money::of(0));
+
+    // Category Query
+    auto books = cat.byCategory(ResourceCategory::Book);
+    CHECK(books.size() == 2);
+
+    // Title Search
+    auto codeResults = cat.searchTitle("code");
+    CHECK(codeResults.size() == 2);
+
+    // Price Range Query
+    auto cheap = cat.byPriceRange(Money::of(0), Money::of(500));
+    CHECK(cheap.size() == 2);
+
+    // Predicate Query
+    auto recent = cat.where([](const Resource& r) { return r.year() >= 2008; });
+    CHECK(recent.size() == 2);
+}
+
 
 
 
@@ -259,6 +284,7 @@ int main() {
 
     test_question_2_ebook();
     test_question_3_audiobook_and_thesis();
+    test_question_4_catalog_queries();
 
 
 

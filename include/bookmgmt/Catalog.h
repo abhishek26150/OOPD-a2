@@ -43,6 +43,7 @@ public:
     std::vector<const Resource*> all() const;
     std::vector<const Resource*> byCategory(ResourceCategory c) const;
     std::vector<const Resource*> searchTitle(const std::string& text) const;  // case-insensitive
+    std::vector<const Resource*> byPriceRange(Money minPrice, Money maxPrice) const;
     std::vector<const Resource*> where(
         const std::function<bool(const Resource&)>& pred) const;
 
