@@ -285,7 +285,20 @@ void test_question_5_reports_and_export() {
     CHECK(csvOutput.find("B01,Book,\"Clean Code\",2008,450.00,5") != std::string::npos);
 }
 
+void test_question_6_taxes() {
+    using namespace bookmgmt;
 
+    Budget budget(Money::of(10000));
+    budget.setPrintTaxRate(0.10);      // 10% tax on print
+    budget.setElectronicTaxRate(0.05); // 5% tax on electronic
+
+    Money base = Money::of(1000);
+    Money printPostTax = budget.costWithTax(ResourceCategory::Book, base);
+    Money elecPostTax = budget.costWithTax(ResourceCategory::ElectronicResource, base);
+
+    CHECK(printPostTax == Money::of(1100));
+    CHECK(elecPostTax == Money::of(1050));
+}
 
 int main() {
     testMoney();
@@ -299,6 +312,7 @@ int main() {
     test_question_3_audiobook_and_thesis();
     test_question_4_catalog_queries();
     test_question_5_reports_and_export();
+    test_question_6_taxes();
 
 
 

@@ -1,8 +1,6 @@
-// Name: Abhishek Kumar Singh
-// Roll Number: MT26150
-
 #include "bookmgmt/Budget.h"
 
+#include <cmath>
 #include <iomanip>
 #include <ostream>
 #include <stdexcept>
@@ -21,7 +19,15 @@ const ResourceCategory kAllCategories[] = {
     ResourceCategory::AudioBook,
     ResourceCategory::Thesis
 };
+
+bool isPrintCategory(ResourceCategory cat) {
+    return cat == ResourceCategory::Book || 
+           cat == ResourceCategory::Journal || 
+           cat == ResourceCategory::Thesis;
 }
+
+}  // namespace
+
 Budget::Budget(Money total) : total_(total) {
     if (total_.isNegative()) throw std::invalid_argument("budget must not be negative");
 }
@@ -57,16 +63,20 @@ std::optional<Money> Budget::spendRemaining(ResourceCategory c) const {
     return q->maxSpend - usageFor(c).spent;
 }
 
-Budget::Failure Budget::evaluate(ResourceCategory c, int units, Money cost,
+Budget::Failure Budget::evaluate(ResourceCategory c, int units, Money baseCost,
                                  std::string& why) const {
     if (units <= 0) {
         why = "quantity must be positive";
         return Failure::BadInput;
     }
-    if (cost.isNegative()) {
+    if (baseCost.isNegative()) {
         why = "cost must not be negative";
         return Failure::BadInput;
     }
+
+    // Apply post-tax cost calculation for evaluation
+    Money cost = costWithTax(c, baseCost);
+
     if (auto left = unitsRemaining(c); left && units > *left) {
         why = std::string(categoryName(c)) + " unit quota exceeded: requested " +
               std::to_string(units) + ", " + std::to_string(*left) + " remaining";
@@ -92,18 +102,21 @@ std::string Budget::check(ResourceCategory c, int units, Money cost) const {
     return why;
 }
 
-void Budget::commit(ResourceCategory c, int units, Money cost) {
+void Budget::commit(ResourceCategory c, int units, Money baseCost) {
     std::string why;
-    switch (evaluate(c, units, cost, why)) {
+    switch (evaluate(c, units, baseCost, why)) {
         case Failure::None: break;
         case Failure::BadInput: throw std::invalid_argument(why);
         case Failure::Quota: throw QuotaExceededError(why);
         case Failure::Overall: throw BudgetExceededError(why);
     }
+    
+    // Deduct total post-tax cost from budget
+    Money totalCost = costWithTax(c, baseCost);
     Usage& u = usage_[c];
     u.units += units;
-    u.spent += cost;
-    spent_ += cost;
+    u.spent += totalCost;
+    spent_ += totalCost;
 }
 
 void Budget::print(std::ostream& os) const {
@@ -121,6 +134,21 @@ void Budget::print(std::ostream& os) const {
         os << "  " << std::setw(20) << categoryName(c) << std::setw(18) << units << spend
            << "\n";
     }
+}
+
+// ==========================================
+// Question 6: Tax Calculations Implementation
+// ==========================================
+
+Money Budget::calculateTax(ResourceCategory cat, Money baseCost) const {
+    double rate = isPrintCategory(cat) ? printTaxRate_ : electronicTaxRate_;
+    // baseCost.minorUnits() gives total minor units (paise/cents)
+    std::int64_t taxMinor = static_cast<std::int64_t>(std::round(baseCost.minorUnits() * rate));
+    return Money::fromMinor(taxMinor);
+}
+
+Money Budget::costWithTax(ResourceCategory cat, Money baseCost) const {
+    return baseCost + calculateTax(cat, baseCost);
 }
 
 }  // namespace bookmgmt

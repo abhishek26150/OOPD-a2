@@ -99,5 +99,21 @@ catalog.emplace<Thesis>("TH301", "Scalable Consensus Algorithms", "Rohan Sharma"
     std::cout << "\n=== Export CSV (Question 5) ===\n";
     catalog.exportCSV(std::cout);
 
+
+    std::cout << "\n=== Taxes (Question 6) ===\n";
+budget.setPrintTaxRate(0.10);      // 10% tax on print items
+budget.setElectronicTaxRate(0.05); // 5% tax on electronic items
+
+Money basePrice = Money::of(1000);
+Money printTax = budget.calculateTax(ResourceCategory::Book, basePrice);
+Money printTotal = budget.costWithTax(ResourceCategory::Book, basePrice);
+
+Money elecTax = budget.calculateTax(ResourceCategory::ElectronicResource, basePrice);
+Money elecTotal = budget.costWithTax(ResourceCategory::ElectronicResource, basePrice);
+
+std::cout << "Base Price: " << basePrice << "\n";
+std::cout << "Print Item (10% tax): Tax = " << printTax << ", Total = " << printTotal << "\n";
+std::cout << "Electronic Item (5% tax): Tax = " << elecTax << ", Total = " << elecTotal << "\n";
+
     return 0;
 }
