@@ -4,6 +4,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -46,6 +47,10 @@ public:
     std::vector<const Resource*> byPriceRange(Money minPrice, Money maxPrice) const;
     std::vector<const Resource*> where(
         const std::function<bool(const Resource&)>& pred) const;
+
+    // Reporting & Export
+    void printDetailedReport(std::ostream& os) const;
+    void exportCSV(std::ostream& os) const;
 
 private:
     struct Entry {

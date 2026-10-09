@@ -270,7 +270,20 @@ void test_question_4_catalog_queries() {
     CHECK(recent.size() == 2);
 }
 
+void test_question_5_reports_and_export() {
+    using namespace bookmgmt;
 
+    Catalog cat;
+    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Robert Martin"}, "123", "Prentice", 2008, Money::of(450), 400);
+    cat.addHoldings("B01", 5);
+
+    std::stringstream ss;
+    cat.exportCSV(ss);
+    std::string csvOutput = ss.str();
+
+    CHECK(csvOutput.find("ID,Category,Title,Year,UnitPrice,Holdings") != std::string::npos);
+    CHECK(csvOutput.find("B01,Book,\"Clean Code\",2008,450.00,5") != std::string::npos);
+}
 
 
 
@@ -285,6 +298,7 @@ int main() {
     test_question_2_ebook();
     test_question_3_audiobook_and_thesis();
     test_question_4_catalog_queries();
+    test_question_5_reports_and_export();
 
 
 

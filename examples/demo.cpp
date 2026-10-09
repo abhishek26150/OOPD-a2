@@ -51,7 +51,7 @@ int main() {
 
 catalog.emplace<Thesis>("TH301", "Scalable Consensus Algorithms", "Rohan Sharma",
                         "Prof. A. Gupta", "IIIT Delhi", "M.Tech", 2025);
-                        
+
 
     Budget budget(Money::of(20000));
     budget.setQuota(ResourceCategory::Book, {10, Money::of(8000)});
@@ -95,5 +95,9 @@ catalog.emplace<Thesis>("TH301", "Scalable Consensus Algorithms", "Rohan Sharma"
     } catch (const QuotaExceededError& e) {
         std::cout << "QuotaExceededError: " << e.what() << "\n";
     }
+
+    std::cout << "\n=== Export CSV (Question 5) ===\n";
+    catalog.exportCSV(std::cout);
+
     return 0;
 }

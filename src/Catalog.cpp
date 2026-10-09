@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <ostream>
 #include <stdexcept>
 
 #include "bookmgmt/Exceptions.h"
@@ -92,6 +93,31 @@ std::vector<const Resource*> Catalog::byPriceRange(Money minPrice, Money maxPric
     return where([minPrice, maxPrice](const Resource& r) {
         return r.unitPrice() >= minPrice && r.unitPrice() <= maxPrice;
     });
+}
+
+void Catalog::printDetailedReport(std::ostream& os) const {
+    os << "=== Detailed Catalog Report ===\n";
+    for (const auto& [id, entry] : items_) {
+        os << "ID: " << id << " | Holdings: " << entry.holdings << "\n";
+        if (entry.resource) {
+            os << *entry.resource << "\n";
+            os << "-----------------------------------\n";
+        }
+    }
+}
+
+void Catalog::exportCSV(std::ostream& os) const {
+    os << "ID,Category,Title,Year,UnitPrice,Holdings\n";
+    for (const auto& [id, entry] : items_) {
+        if (entry.resource) {
+            os << id << ","
+               << categoryName(entry.resource->category()) << ",\""
+               << entry.resource->title() << "\","
+               << entry.resource->year() << ","
+               << entry.resource->unitPrice() << ","
+               << entry.holdings << "\n";
+        }
+    }
 }
 
 }  // namespace bookmgmt
