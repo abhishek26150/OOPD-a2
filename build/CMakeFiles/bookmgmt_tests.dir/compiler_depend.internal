@@ -240,6 +240,7 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o
  /workspaces/OOPD-a2/include/bookmgmt/Book.h
  /workspaces/OOPD-a2/include/bookmgmt/Budget.h
  /workspaces/OOPD-a2/include/bookmgmt/Catalog.h
+ /workspaces/OOPD-a2/include/bookmgmt/EBook.h
  /workspaces/OOPD-a2/include/bookmgmt/ElectronicResource.h
  /workspaces/OOPD-a2/include/bookmgmt/Exceptions.h
  /workspaces/OOPD-a2/include/bookmgmt/Journal.h

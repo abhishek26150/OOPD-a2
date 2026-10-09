@@ -41,6 +41,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/bookmgmt.dir/DependInfo.cmake"
-  "CMakeFiles/bookmgmt_tests.dir/DependInfo.cmake"
   "CMakeFiles/demo.dir/DependInfo.cmake"
+  "CMakeFiles/bookmgmt_tests.dir/DependInfo.cmake"
   )

@@ -2,7 +2,6 @@
 // Roll Number: MT26150
 
 #pragma once
-// Resource: abstract base class for every item the library can hold or buy.
 
 #include <iosfwd>
 #include <string>
@@ -11,7 +10,7 @@
 
 namespace bookmgmt {
 
-enum class ResourceCategory { Book, ElectronicResource, Journal };
+enum class ResourceCategory { Book, ElectronicResource, Journal, EBook };
 
 const char* categoryName(ResourceCategory c);
 

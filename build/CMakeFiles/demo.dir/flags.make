@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/workspaces/OOPD-a2/include
 
-CXX_FLAGS = -std=gnu++17 -Wall -Wextra
+CXX_FLAGS = -std=c++17
 

@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/bookmgmt.dir/src/Budget.cpp.o.d"
   "CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o"
   "CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o.d"
+  "CMakeFiles/bookmgmt.dir/src/EBook.cpp.o"
+  "CMakeFiles/bookmgmt.dir/src/EBook.cpp.o.d"
   "CMakeFiles/bookmgmt.dir/src/ElectronicResource.cpp.o"
   "CMakeFiles/bookmgmt.dir/src/ElectronicResource.cpp.o.d"
   "CMakeFiles/bookmgmt.dir/src/Journal.cpp.o"

@@ -65,6 +65,16 @@ CMAKE_BINARY_DIR = /workspaces/OOPD-a2/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
@@ -130,19 +140,6 @@ bookmgmt/fast:
 .PHONY : bookmgmt/fast
 
 #=============================================================================
-# Target rules for targets named bookmgmt_tests
-
-# Build rule for target.
-bookmgmt_tests: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 bookmgmt_tests
-.PHONY : bookmgmt_tests
-
-# fast build rule for target.
-bookmgmt_tests/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt_tests.dir/build.make CMakeFiles/bookmgmt_tests.dir/build
-.PHONY : bookmgmt_tests/fast
-
-#=============================================================================
 # Target rules for targets named demo
 
 # Build rule for target.
@@ -154,6 +151,19 @@ demo: cmake_check_build_system
 demo/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/build
 .PHONY : demo/fast
+
+#=============================================================================
+# Target rules for targets named bookmgmt_tests
+
+# Build rule for target.
+bookmgmt_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 bookmgmt_tests
+.PHONY : bookmgmt_tests
+
+# fast build rule for target.
+bookmgmt_tests/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt_tests.dir/build.make CMakeFiles/bookmgmt_tests.dir/build
+.PHONY : bookmgmt_tests/fast
 
 examples/demo.o: examples/demo.cpp.o
 .PHONY : examples/demo.o
@@ -274,6 +284,30 @@ src/Catalog.s: src/Catalog.cpp.s
 src/Catalog.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/Catalog.cpp.s
 .PHONY : src/Catalog.cpp.s
+
+src/EBook.o: src/EBook.cpp.o
+.PHONY : src/EBook.o
+
+# target to build an object file
+src/EBook.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/EBook.cpp.o
+.PHONY : src/EBook.cpp.o
+
+src/EBook.i: src/EBook.cpp.i
+.PHONY : src/EBook.i
+
+# target to preprocess a source file
+src/EBook.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/EBook.cpp.i
+.PHONY : src/EBook.cpp.i
+
+src/EBook.s: src/EBook.cpp.s
+.PHONY : src/EBook.s
+
+# target to generate assembly for a file
+src/EBook.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/EBook.cpp.s
+.PHONY : src/EBook.cpp.s
 
 src/ElectronicResource.o: src/ElectronicResource.cpp.o
 .PHONY : src/ElectronicResource.o
@@ -403,6 +437,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... test"
 	@echo "... bookmgmt"
 	@echo "... bookmgmt_tests"
 	@echo "... demo"
@@ -421,6 +456,9 @@ help:
 	@echo "... src/Catalog.o"
 	@echo "... src/Catalog.i"
 	@echo "... src/Catalog.s"
+	@echo "... src/EBook.o"
+	@echo "... src/EBook.i"
+	@echo "... src/EBook.s"
 	@echo "... src/ElectronicResource.o"
 	@echo "... src/ElectronicResource.i"
 	@echo "... src/ElectronicResource.s"

@@ -10,6 +10,8 @@
 
 #include "bookmgmt/bookmgmt.h"
 
+#include "bookmgmt/EBook.h"
+
 using namespace bookmgmt;
 
 static int g_failures = 0;
@@ -178,6 +180,41 @@ static void testJournal() {
     CHECK_THROWS(Journal("J2", "Bad", "Pub", 2023, Money::of(100), "issn", 4, 0), std::invalid_argument);
     CHECK_THROWS(j.costFor(0), std::invalid_argument);
 }
+void test_question_2_ebook() {
+    using namespace bookmgmt;
+
+    EBook ebook("EB001", "C++ Primer", {"Stanley Lippman", "Josée Lajoie"},
+                "978-0321714114", "Addison-Wesley", 2012, Money::of(250),
+                "https://ebooks.example/cpp", FileFormat::EPUB, true);
+
+    CHECK(ebook.id() == "EB001");
+    CHECK(ebook.title() == "C++ Primer");
+    CHECK(ebook.category() == ResourceCategory::EBook);
+    CHECK(ebook.isDigital() == true);
+    CHECK(ebook.format() == FileFormat::EPUB);
+    CHECK(ebook.isDrmProtected() == true);
+    CHECK(ebook.costFor(4) == Money::of(1000));
+
+    // Test quota & catalog integration
+    Catalog catalog;
+    catalog.emplace<EBook>("EB001", "C++ Primer", std::vector<std::string>{"Lippman"},
+                           "978-0321714114", "AW", 2012, Money::of(200),
+                           "https://ebooks.example/cpp");
+
+    Budget budget(Money::of(5000));
+    Quota q;
+    q.maxUnits = 5;
+    q.maxSpend = Money::of(1000);
+    budget.setQuota(ResourceCategory::EBook, q);
+
+    AcquisitionManager acq(catalog, budget);
+    CHECK(acq.canPurchase("EB001", 3) == true);
+    auto order = acq.purchase("EB001", 3);
+    CHECK(order.approved == true);
+}
+
+
+
 
 int main() {
     testMoney();
@@ -186,6 +223,11 @@ int main() {
     testBudget();
     testAcquisition();
     testJournal();
+
+    test_question_2_ebook();
+
+
+
     std::cout << (g_checks - g_failures) << "/" << g_checks << " checks passed\n";
     return g_failures == 0 ? 0 : 1;
 }

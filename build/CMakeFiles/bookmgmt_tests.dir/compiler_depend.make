@@ -239,6 +239,7 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: /workspaces/OOPD-a2/tests/t
   /workspaces/OOPD-a2/include/bookmgmt/Book.h \
   /workspaces/OOPD-a2/include/bookmgmt/Budget.h \
   /workspaces/OOPD-a2/include/bookmgmt/Catalog.h \
+  /workspaces/OOPD-a2/include/bookmgmt/EBook.h \
   /workspaces/OOPD-a2/include/bookmgmt/ElectronicResource.h \
   /workspaces/OOPD-a2/include/bookmgmt/Exceptions.h \
   /workspaces/OOPD-a2/include/bookmgmt/Journal.h \
@@ -498,6 +499,8 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: /workspaces/OOPD-a2/tests/t
 /usr/include/c++/13/iosfwd:
 
 /usr/include/c++/13/cwchar:
+
+/workspaces/OOPD-a2/include/bookmgmt/EBook.h:
 
 /usr/include/alloca.h:
 

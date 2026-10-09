@@ -10,6 +10,9 @@
 
 using namespace bookmgmt;
 
+#include "bookmgmt/EBook.h"
+
+
 int main() {
     Catalog catalog;
 
@@ -34,6 +37,10 @@ int main() {
     std::cout << "\n=== Details of R001 ===\n" << catalog.get("R001");
     std::cout << "\n=== Details of J001 (Journal) ===\n" << catalog.get("J001");
 
+    catalog.emplace<bookmgmt::EBook>("EB101", "Designing Data-Intensive Applications",
+                       std::vector<std::string>{"Martin Kleppmann"},
+                       "978-1449373320", "O'Reilly", 2017, Money::of(300),
+                       "https://oreilly.example/ddia", bookmgmt::FileFormat::PDF, false);
     Budget budget(Money::of(20000));
     budget.setQuota(ResourceCategory::Book, {10, Money::of(8000)});
     budget.setQuota(ResourceCategory::ElectronicResource, {40, Money::of(12000)});

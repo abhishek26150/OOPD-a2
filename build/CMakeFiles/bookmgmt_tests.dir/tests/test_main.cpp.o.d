@@ -195,4 +195,5 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: \
  /usr/include/c++/13/pstl/glue_memory_defs.h \
  /usr/include/c++/13/pstl/execution_defs.h \
  /workspaces/OOPD-a2/include/bookmgmt/Acquisition.h \
- /workspaces/OOPD-a2/include/bookmgmt/Exceptions.h
+ /workspaces/OOPD-a2/include/bookmgmt/Exceptions.h \
+ /workspaces/OOPD-a2/include/bookmgmt/EBook.h
