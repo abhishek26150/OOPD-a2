@@ -11,6 +11,8 @@
 using namespace bookmgmt;
 
 #include "bookmgmt/EBook.h"
+#include "bookmgmt/AudioBook.h"
+#include "bookmgmt/Thesis.h"
 
 
 int main() {
@@ -41,6 +43,16 @@ int main() {
                        std::vector<std::string>{"Martin Kleppmann"},
                        "978-1449373320", "O'Reilly", 2017, Money::of(300),
                        "https://oreilly.example/ddia", bookmgmt::FileFormat::PDF, false);
+
+    catalog.emplace<AudioBook>("AB201", "Design Patterns",
+                           std::vector<std::string>{"Erich Gamma", "Richard Helm"},
+                           "978-0201633610", "Pearson", 2020, Money::of(400),
+                           "https://audio.example/dp", 480, "Derek Perkins");
+
+catalog.emplace<Thesis>("TH301", "Scalable Consensus Algorithms", "Rohan Sharma",
+                        "Prof. A. Gupta", "IIIT Delhi", "M.Tech", 2025);
+                        
+
     Budget budget(Money::of(20000));
     budget.setQuota(ResourceCategory::Book, {10, Money::of(8000)});
     budget.setQuota(ResourceCategory::ElectronicResource, {40, Money::of(12000)});

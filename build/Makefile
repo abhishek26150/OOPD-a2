@@ -213,6 +213,30 @@ src/Acquisition.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/Acquisition.cpp.s
 .PHONY : src/Acquisition.cpp.s
 
+src/AudioBook.o: src/AudioBook.cpp.o
+.PHONY : src/AudioBook.o
+
+# target to build an object file
+src/AudioBook.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o
+.PHONY : src/AudioBook.cpp.o
+
+src/AudioBook.i: src/AudioBook.cpp.i
+.PHONY : src/AudioBook.i
+
+# target to preprocess a source file
+src/AudioBook.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.i
+.PHONY : src/AudioBook.cpp.i
+
+src/AudioBook.s: src/AudioBook.cpp.s
+.PHONY : src/AudioBook.s
+
+# target to generate assembly for a file
+src/AudioBook.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.s
+.PHONY : src/AudioBook.cpp.s
+
 src/Book.o: src/Book.cpp.o
 .PHONY : src/Book.o
 
@@ -405,6 +429,30 @@ src/Resource.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/Resource.cpp.s
 .PHONY : src/Resource.cpp.s
 
+src/Thesis.o: src/Thesis.cpp.o
+.PHONY : src/Thesis.o
+
+# target to build an object file
+src/Thesis.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o
+.PHONY : src/Thesis.cpp.o
+
+src/Thesis.i: src/Thesis.cpp.i
+.PHONY : src/Thesis.i
+
+# target to preprocess a source file
+src/Thesis.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/Thesis.cpp.i
+.PHONY : src/Thesis.cpp.i
+
+src/Thesis.s: src/Thesis.cpp.s
+.PHONY : src/Thesis.s
+
+# target to generate assembly for a file
+src/Thesis.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bookmgmt.dir/build.make CMakeFiles/bookmgmt.dir/src/Thesis.cpp.s
+.PHONY : src/Thesis.cpp.s
+
 tests/test_main.o: tests/test_main.cpp.o
 .PHONY : tests/test_main.o
 
@@ -447,6 +495,9 @@ help:
 	@echo "... src/Acquisition.o"
 	@echo "... src/Acquisition.i"
 	@echo "... src/Acquisition.s"
+	@echo "... src/AudioBook.o"
+	@echo "... src/AudioBook.i"
+	@echo "... src/AudioBook.s"
 	@echo "... src/Book.o"
 	@echo "... src/Book.i"
 	@echo "... src/Book.s"
@@ -471,6 +522,9 @@ help:
 	@echo "... src/Resource.o"
 	@echo "... src/Resource.i"
 	@echo "... src/Resource.s"
+	@echo "... src/Thesis.o"
+	@echo "... src/Thesis.i"
+	@echo "... src/Thesis.s"
 	@echo "... tests/test_main.o"
 	@echo "... tests/test_main.i"
 	@echo "... tests/test_main.s"

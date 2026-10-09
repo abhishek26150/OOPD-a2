@@ -195,6 +195,34 @@ CMakeFiles/bookmgmt.dir/src/Journal.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bookmgmt.dir/src/Journal.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspaces/OOPD-a2/src/Journal.cpp -o CMakeFiles/bookmgmt.dir/src/Journal.cpp.s
 
+CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o: CMakeFiles/bookmgmt.dir/flags.make
+CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o: /workspaces/OOPD-a2/src/AudioBook.cpp
+CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o: CMakeFiles/bookmgmt.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/workspaces/OOPD-a2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o -MF CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o.d -o CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o -c /workspaces/OOPD-a2/src/AudioBook.cpp
+
+CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /workspaces/OOPD-a2/src/AudioBook.cpp > CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.i
+
+CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspaces/OOPD-a2/src/AudioBook.cpp -o CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.s
+
+CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: CMakeFiles/bookmgmt.dir/flags.make
+CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp
+CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: CMakeFiles/bookmgmt.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/workspaces/OOPD-a2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o -MF CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o.d -o CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o -c /workspaces/OOPD-a2/src/Thesis.cpp
+
+CMakeFiles/bookmgmt.dir/src/Thesis.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bookmgmt.dir/src/Thesis.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /workspaces/OOPD-a2/src/Thesis.cpp > CMakeFiles/bookmgmt.dir/src/Thesis.cpp.i
+
+CMakeFiles/bookmgmt.dir/src/Thesis.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bookmgmt.dir/src/Thesis.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspaces/OOPD-a2/src/Thesis.cpp -o CMakeFiles/bookmgmt.dir/src/Thesis.cpp.s
+
 # Object files for target bookmgmt
 bookmgmt_OBJECTS = \
 "CMakeFiles/bookmgmt.dir/src/Money.cpp.o" \
@@ -205,7 +233,9 @@ bookmgmt_OBJECTS = \
 "CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o" \
 "CMakeFiles/bookmgmt.dir/src/Acquisition.cpp.o" \
 "CMakeFiles/bookmgmt.dir/src/EBook.cpp.o" \
-"CMakeFiles/bookmgmt.dir/src/Journal.cpp.o"
+"CMakeFiles/bookmgmt.dir/src/Journal.cpp.o" \
+"CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o" \
+"CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o"
 
 # External object files for target bookmgmt
 bookmgmt_EXTERNAL_OBJECTS =
@@ -219,9 +249,11 @@ libbookmgmt.a: CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o
 libbookmgmt.a: CMakeFiles/bookmgmt.dir/src/Acquisition.cpp.o
 libbookmgmt.a: CMakeFiles/bookmgmt.dir/src/EBook.cpp.o
 libbookmgmt.a: CMakeFiles/bookmgmt.dir/src/Journal.cpp.o
+libbookmgmt.a: CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o
+libbookmgmt.a: CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o
 libbookmgmt.a: CMakeFiles/bookmgmt.dir/build.make
 libbookmgmt.a: CMakeFiles/bookmgmt.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/workspaces/OOPD-a2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX static library libbookmgmt.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/workspaces/OOPD-a2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX static library libbookmgmt.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/bookmgmt.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/bookmgmt.dir/link.txt --verbose=$(VERBOSE)
 

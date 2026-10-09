@@ -11,6 +11,8 @@
 #include "bookmgmt/bookmgmt.h"
 
 #include "bookmgmt/EBook.h"
+#include "bookmgmt/AudioBook.h"
+#include "bookmgmt/Thesis.h"
 
 using namespace bookmgmt;
 
@@ -213,6 +215,37 @@ void test_question_2_ebook() {
     CHECK(order.approved == true);
 }
 
+void test_question_3_audiobook_and_thesis() {
+    using namespace bookmgmt;
+
+    // Test AudioBook
+    AudioBook abook("AB001", "The Pragmatic Programmer", {"Andrew Hunt", "David Thomas"},
+                    "978-0135957059", "Addison-Wesley", 2019, Money::of(350),
+                    "https://audio.example/pp", 600, "Ray Chase", "MP3");
+
+    CHECK(abook.id() == "AB001");
+    CHECK(abook.title() == "The Pragmatic Programmer");
+    CHECK(abook.category() == ResourceCategory::AudioBook);
+    CHECK(abook.isDigital() == true);
+    CHECK(abook.durationMinutes() == 600);
+    CHECK(abook.narrator() == "Ray Chase");
+    CHECK(abook.audioFormat() == "MP3");
+
+    // Test Thesis
+    Thesis thesis("TH001", "Deep Learning Systems Design", "Alex Rivera",
+                  "Dr. Sarah Connor", "IIIT Delhi", "Ph.D.", 2024, Money::of(0));
+
+    CHECK(thesis.id() == "TH001");
+    CHECK(thesis.category() == ResourceCategory::Thesis);
+    CHECK(thesis.author() == "Alex Rivera");
+    CHECK(thesis.advisor() == "Dr. Sarah Connor");
+    CHECK(thesis.institution() == "IIIT Delhi");
+    CHECK(thesis.degree() == "Ph.D.");
+    CHECK(thesis.costFor(1) == Money::of(0));
+}
+
+
+
 
 
 
@@ -225,6 +258,7 @@ int main() {
     testJournal();
 
     test_question_2_ebook();
+    test_question_3_audiobook_and_thesis();
 
 
 

@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/workspaces/OOPD-a2/src/Acquisition.cpp" "CMakeFiles/bookmgmt.dir/src/Acquisition.cpp.o" "gcc" "CMakeFiles/bookmgmt.dir/src/Acquisition.cpp.o.d"
+  "/workspaces/OOPD-a2/src/AudioBook.cpp" "CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o" "gcc" "CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o.d"
   "/workspaces/OOPD-a2/src/Book.cpp" "CMakeFiles/bookmgmt.dir/src/Book.cpp.o" "gcc" "CMakeFiles/bookmgmt.dir/src/Book.cpp.o.d"
   "/workspaces/OOPD-a2/src/Budget.cpp" "CMakeFiles/bookmgmt.dir/src/Budget.cpp.o" "gcc" "CMakeFiles/bookmgmt.dir/src/Budget.cpp.o.d"
   "/workspaces/OOPD-a2/src/Catalog.cpp" "CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o" "gcc" "CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o.d"
@@ -17,6 +18,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/workspaces/OOPD-a2/src/Journal.cpp" "CMakeFiles/bookmgmt.dir/src/Journal.cpp.o" "gcc" "CMakeFiles/bookmgmt.dir/src/Journal.cpp.o.d"
   "/workspaces/OOPD-a2/src/Money.cpp" "CMakeFiles/bookmgmt.dir/src/Money.cpp.o" "gcc" "CMakeFiles/bookmgmt.dir/src/Money.cpp.o.d"
   "/workspaces/OOPD-a2/src/Resource.cpp" "CMakeFiles/bookmgmt.dir/src/Resource.cpp.o" "gcc" "CMakeFiles/bookmgmt.dir/src/Resource.cpp.o.d"
+  "/workspaces/OOPD-a2/src/Thesis.cpp" "CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o" "gcc" "CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

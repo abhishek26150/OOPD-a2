@@ -196,4 +196,6 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: \
  /usr/include/c++/13/pstl/execution_defs.h \
  /workspaces/OOPD-a2/include/bookmgmt/Acquisition.h \
  /workspaces/OOPD-a2/include/bookmgmt/Exceptions.h \
- /workspaces/OOPD-a2/include/bookmgmt/EBook.h
+ /workspaces/OOPD-a2/include/bookmgmt/EBook.h \
+ /workspaces/OOPD-a2/include/bookmgmt/AudioBook.h \
+ /workspaces/OOPD-a2/include/bookmgmt/Thesis.h

@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/bookmgmt.dir/src/Acquisition.cpp.o"
   "CMakeFiles/bookmgmt.dir/src/Acquisition.cpp.o.d"
+  "CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o"
+  "CMakeFiles/bookmgmt.dir/src/AudioBook.cpp.o.d"
   "CMakeFiles/bookmgmt.dir/src/Book.cpp.o"
   "CMakeFiles/bookmgmt.dir/src/Book.cpp.o.d"
   "CMakeFiles/bookmgmt.dir/src/Budget.cpp.o"
@@ -17,6 +19,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/bookmgmt.dir/src/Money.cpp.o.d"
   "CMakeFiles/bookmgmt.dir/src/Resource.cpp.o"
   "CMakeFiles/bookmgmt.dir/src/Resource.cpp.o.d"
+  "CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o"
+  "CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o.d"
   "libbookmgmt.a"
   "libbookmgmt.pdb"
 )
