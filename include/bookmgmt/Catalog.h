@@ -1,3 +1,8 @@
+// Name: Abhishek Kumar Singh
+// Roll Number: MT26150
+
+
+
 #pragma once
 // Catalog: owns every Resource, keyed by its id, and tracks copies/seats held.
 
