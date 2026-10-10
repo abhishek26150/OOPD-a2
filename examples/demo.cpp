@@ -232,8 +232,18 @@ std::cout << "\n=== All-or-Nothing Batch Processing (Question 11) ===\n";
     std::cout << "Opening e-resource session R01: " << (lendCat.openSession("R01") ? "Success" : "Failed") << "\n";
     std::cout << "Opening second session (Exceeds seats): " << (lendCat.openSession("R01") ? "Success" : "Failed (Seats Full)") << "\n";
     
-    
+   std::cout << "\n=== Currency Mismatch Exception (Question 15) ===\n";
+    Money usd = Money::of(100, 0, "USD");
+    Money eur = Money::of(50, 0, "EUR");
 
-    
+    std::cout << "USD Amount: " << usd << " " << usd.currency() << "\n";
+    std::cout << "EUR Amount: " << eur << " " << eur.currency() << "\n";
+    try {
+        Money invalidSum = usd + eur;
+    } catch (const std::invalid_argument& e) {
+        std::cout << "Exception caught successfully: " << e.what() << "\n";
+    } 
+
+
     return 0;
 }

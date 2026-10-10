@@ -508,6 +508,25 @@ void test_question_14_lending() {
 
 
 
+void test_question_15_currency_mismatch() {
+    using namespace bookmgmt;
+
+    Money usd10 = Money::of(10, 0, "USD");
+    Money usd5  = Money::of(5, 0, "USD");
+    Money eur5  = Money::of(5, 0, "EUR");
+
+    CHECK(usd10 + usd5 == Money::of(15, 0, "USD"));
+    CHECK(usd10.currency() == "USD");
+
+    // Foreign currency operations throw std::invalid_argument
+    CHECK_THROWS(usd10 + eur5, std::invalid_argument);
+    CHECK_THROWS(usd10 - eur5, std::invalid_argument);
+    CHECK_THROWS(usd10 < eur5, std::invalid_argument);
+    CHECK_THROWS(usd10 == eur5, std::invalid_argument);
+}
+
+
+
 int main() {
     testMoney();
     testResourcesAndCost();
@@ -529,6 +548,7 @@ int main() {
     test_question_12_vendors();
     test_question_13_extended_searches();
     test_question_14_lending();
+    test_question_15_currency_mismatch();
 
 
     std::cout << (g_checks - g_failures) << "/" << g_checks << " checks passed\n";
