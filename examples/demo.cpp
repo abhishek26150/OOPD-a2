@@ -115,5 +115,19 @@ std::cout << "Base Price: " << basePrice << "\n";
 std::cout << "Print Item (10% tax): Tax = " << printTax << ", Total = " << printTotal << "\n";
 std::cout << "Electronic Item (5% tax): Tax = " << elecTax << ", Total = " << elecTotal << "\n";
 
+
+std::cout << "\n=== Search, Filtering & Sorting (Question 7) ===\n";
+    auto codeBooks = catalog.searchTitle("code");
+    std::cout << "Search 'code': Found " << codeBooks.size() << " item(s)\n";
+    for (const auto* r : codeBooks) {
+        std::cout << "  - " << r->id() << ": " << r->title() << " (" << r->year() << ")\n";
+    }
+
+    auto cheapItems = catalog.byPriceRange(Money::of(100), Money::of(500));
+    std::cout << "\nItems in price range 100.00 - 500.00 (Sorted Ascending by Unit Price):\n";
+    Catalog::sortResults(cheapItems, SortField::UnitPrice, SortOrder::Ascending);
+    for (const auto* r : cheapItems) {
+        std::cout << "  - " << r->id() << ": " << r->title() << " @ " << r->unitPrice() << "\n";
+    }
     return 0;
 }

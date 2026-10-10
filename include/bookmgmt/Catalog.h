@@ -12,6 +12,9 @@
 
 namespace bookmgmt {
 
+enum class SortField { Title, Year, UnitPrice };
+enum class SortOrder { Ascending, Descending };
+
 class Catalog {
 public:
     // Takes ownership. Throws DuplicateIdError if the id is already present.
@@ -47,6 +50,11 @@ public:
     std::vector<const Resource*> byPriceRange(Money minPrice, Money maxPrice) const;
     std::vector<const Resource*> where(
         const std::function<bool(const Resource&)>& pred) const;
+
+    // Question 7: Sorting extension
+    static void sortResults(std::vector<const Resource*>& results, 
+                            SortField field, 
+                            SortOrder order = SortOrder::Ascending);
 
     // Reporting & Export
     void printDetailedReport(std::ostream& os) const;

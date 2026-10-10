@@ -95,6 +95,21 @@ std::vector<const Resource*> Catalog::byPriceRange(Money minPrice, Money maxPric
     });
 }
 
+void Catalog::sortResults(std::vector<const Resource*>& results, SortField field, SortOrder order) {
+    std::sort(results.begin(), results.end(), [field, order](const Resource* a, const Resource* b) {
+        bool less = false;
+        if (field == SortField::Title) {
+            less = a->title() < b->title();
+        } else if (field == SortField::Year) {
+            less = a->year() < b->year();
+        } else if (field == SortField::UnitPrice) {
+            less = a->unitPrice() < b->unitPrice();
+        }
+
+        return order == SortOrder::Ascending ? less : !less;
+    });
+}
+
 void Catalog::printDetailedReport(std::ostream& os) const {
     os << "=== Detailed Catalog Report ===\n";
     for (const auto& [id, entry] : items_) {

@@ -300,6 +300,39 @@ void test_question_6_taxes() {
     CHECK(elecPostTax == Money::of(1050));
 }
 
+void test_question_7_sorting_and_queries() {
+    using namespace bookmgmt;
+
+    Catalog catalog;
+    catalog.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(450));
+    catalog.emplace<Book>("B02", "The C++ Programming Language", std::vector<std::string>{"Stroustrup"}, "456", "Pearson", 2013, Money::of(1200));
+    catalog.emplace<ElectronicResource>("R01", "IEEE Xplore", "IEEE", 2026, Money::of(150), "https://link", LicenseModel::AnnualSubscription, Money::of(2000));
+
+    // Case-insensitive title search
+    auto codeResults = catalog.searchTitle("code");
+    CHECK(codeResults.size() == 1);
+    CHECK(codeResults[0]->id() == "B01");
+
+    // Price range filtering
+    auto cheapItems = catalog.byPriceRange(Money::of(100), Money::of(500));
+    CHECK(cheapItems.size() == 2); // B01 (450) and R01 (150)
+
+    // Category filtering
+    auto books = catalog.byCategory(ResourceCategory::Book);
+    CHECK(books.size() == 2);
+
+    // Sorting results
+    auto allItems = catalog.all();
+    Catalog::sortResults(allItems, SortField::UnitPrice, SortOrder::Ascending);
+    CHECK(allItems[0]->id() == "R01"); // 150
+    CHECK(allItems[1]->id() == "B01"); // 450
+    CHECK(allItems[2]->id() == "B02"); // 1200
+
+    Catalog::sortResults(allItems, SortField::UnitPrice, SortOrder::Descending);
+    CHECK(allItems[0]->id() == "B02"); // 1200
+}
+
+
 int main() {
     testMoney();
     testResourcesAndCost();
@@ -313,6 +346,7 @@ int main() {
     test_question_4_catalog_queries();
     test_question_5_reports_and_export();
     test_question_6_taxes();
+    test_question_7_sorting_and_queries();
 
 
 
