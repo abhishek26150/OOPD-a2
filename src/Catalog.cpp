@@ -178,4 +178,60 @@ void Catalog::exportCSV(std::ostream& os) const {
     }
 }
 
+bool Catalog::borrowCopy(const std::string& id) {
+    auto it = items_.find(id);
+    if (it == items_.end()) throw NotFoundError(id);
+
+    if (it->second.borrowedCopies < it->second.holdings) {
+        it->second.borrowedCopies++;
+        return true;
+    }
+    return false;
+}
+
+bool Catalog::returnCopy(const std::string& id) {
+    auto it = items_.find(id);
+    if (it == items_.end()) throw NotFoundError(id);
+
+    if (it->second.borrowedCopies > 0) {
+        it->second.borrowedCopies--;
+        return true;
+    }
+    return false;
+}
+
+int Catalog::activeBorrows(const std::string& id) const {
+    auto it = items_.find(id);
+    if (it == items_.end()) throw NotFoundError(id);
+    return it->second.borrowedCopies;
+}
+
+bool Catalog::openSession(const std::string& id) {
+    auto it = items_.find(id);
+    if (it == items_.end()) throw NotFoundError(id);
+
+    if (it->second.activeSessions < it->second.holdings) {
+        it->second.activeSessions++;
+        return true;
+    }
+    return false;
+}
+
+bool Catalog::closeSession(const std::string& id) {
+    auto it = items_.find(id);
+    if (it == items_.end()) throw NotFoundError(id);
+
+    if (it->second.activeSessions > 0) {
+        it->second.activeSessions--;
+        return true;
+    }
+    return false;
+}
+
+int Catalog::activeSessions(const std::string& id) const {
+    auto it = items_.find(id);
+    if (it == items_.end()) throw NotFoundError(id);
+    return it->second.activeSessions;
+}
+
 }  // namespace bookmgmt

@@ -217,6 +217,23 @@ std::cout << "\n=== All-or-Nothing Batch Processing (Question 11) ===\n";
     auto found = searchCat.findByYearRange(2000, 2010);
     std::cout << "Found " << found.size() << " book(s) published between 2000-2010: " 
               << (found.empty() ? "" : found[0]->title()) << "\n";
+      
               
+    std::cout << "\n=== Lending System (Question 14) ===\n";
+    Catalog lendCat;
+    lendCat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(400));
+    lendCat.addHoldings("B01", 1);
+
+    lendCat.emplace<ElectronicResource>("R01", "ACM Digital Library", "ACM", 2026, Money::of(100), "https://acm.example");
+    lendCat.addHoldings("R01", 1);
+
+    std::cout << "Borrowing print copy B01: " << (lendCat.borrowCopy("B01") ? "Success" : "Failed") << "\n";
+    std::cout << "Borrowing second copy (Exceeds holdings): " << (lendCat.borrowCopy("B01") ? "Success" : "Failed (Limit Reached)") << "\n";
+    std::cout << "Opening e-resource session R01: " << (lendCat.openSession("R01") ? "Success" : "Failed") << "\n";
+    std::cout << "Opening second session (Exceeds seats): " << (lendCat.openSession("R01") ? "Success" : "Failed (Seats Full)") << "\n";
+    
+    
+
+    
     return 0;
 }

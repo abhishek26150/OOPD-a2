@@ -478,7 +478,33 @@ void test_question_13_extended_searches() {
     CHECK(byYear[0]->id() == "B01");
 }
 
+void test_question_14_lending() {
+    using namespace bookmgmt;
 
+    Catalog cat;
+    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(400));
+    cat.addHoldings("B01", 2);
+
+    cat.emplace<ElectronicResource>("R01", "IEEE Library", "IEEE", 2026, Money::of(100), "http://ex", LicenseModel::AnnualSubscription, Money::of(0));
+    cat.addHoldings("R01", 1);
+
+    // Print copy borrowing limits check
+    CHECK(cat.borrowCopy("B01") == true);
+    CHECK(cat.borrowCopy("B01") == true);
+    CHECK(cat.borrowCopy("B01") == false);
+    CHECK(cat.activeBorrows("B01") == 2);
+
+    CHECK(cat.returnCopy("B01") == true);
+    CHECK(cat.activeBorrows("B01") == 1);
+
+    // E-resource active sessions limits check
+    CHECK(cat.openSession("R01") == true);
+    CHECK(cat.openSession("R01") == false);
+    CHECK(cat.activeSessions("R01") == 1);
+
+    CHECK(cat.closeSession("R01") == true);
+    CHECK(cat.activeSessions("R01") == 0);
+}
 
 
 
@@ -502,6 +528,7 @@ int main() {
     test_question_11_all_or_nothing_batch();
     test_question_12_vendors();
     test_question_13_extended_searches();
+    test_question_14_lending();
 
 
     std::cout << (g_checks - g_failures) << "/" << g_checks << " checks passed\n";

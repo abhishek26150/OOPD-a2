@@ -17,10 +17,8 @@ enum class SortOrder { Ascending, Descending };
 
 class Catalog {
 public:
-    // Takes ownership. Throws DuplicateIdError if the id is already present.
     Resource& add(std::unique_ptr<Resource> r);
 
-    // Convenience: catalog.emplace<Book>(ctor args...)
     template <typename T, typename... Args>
     T& emplace(Args&&... args) {
         auto p = std::make_unique<T>(std::forward<Args>(args)...);
@@ -39,37 +37,43 @@ public:
     std::size_t size() const { return items_.size(); }
     bool empty() const { return items_.empty(); }
 
-    // Holdings: number of copies (print) or seats (electronic) owned.
     int holdings(const std::string& id) const;
     void addHoldings(const std::string& id, int units);
 
-    // Queries. Results are in id order and point into the catalog.
     std::vector<const Resource*> all() const;
     std::vector<const Resource*> byCategory(ResourceCategory c) const;
-    std::vector<const Resource*> searchTitle(const std::string& text) const;  // case-insensitive
+    std::vector<const Resource*> searchTitle(const std::string& text) const;
     std::vector<const Resource*> byPriceRange(Money minPrice, Money maxPrice) const;
     std::vector<const Resource*> where(
         const std::function<bool(const Resource&)>& pred) const;
 
-    // Question 7: Sorting extension
     static void sortResults(std::vector<const Resource*>& results, 
                             SortField field, 
                             SortOrder order = SortOrder::Ascending);
 
-    // Reporting & Export
     void printDetailedReport(std::ostream& os) const;
     void exportCSV(std::ostream& os) const;
 
-        // Question 13
-
+    // Question 13: Extended Search
     std::vector<const Resource*> findByAuthor(const std::string& author) const;
     std::vector<const Resource*> findByIsbnOrIssn(const std::string& identifier) const;
     std::vector<const Resource*> findByYearRange(int startYear, int endYear) const;
+
+    // Question 14: Lending System
+    bool borrowCopy(const std::string& id);
+    bool returnCopy(const std::string& id);
+    int activeBorrows(const std::string& id) const;
+
+    bool openSession(const std::string& id);
+    bool closeSession(const std::string& id);
+    int activeSessions(const std::string& id) const;
 
 private:
     struct Entry {
         std::unique_ptr<Resource> resource;
         int holdings = 0;
+        int borrowedCopies = 0;
+        int activeSessions = 0;
     };
     std::map<std::string, Entry> items_;
 };
