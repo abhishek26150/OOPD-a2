@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cctype>
 #include <ostream>
+#include <sstream>
 #include <stdexcept>
 
 #include "bookmgmt/Exceptions.h"
@@ -93,6 +94,48 @@ std::vector<const Resource*> Catalog::byPriceRange(Money minPrice, Money maxPric
     return where([minPrice, maxPrice](const Resource& r) {
         return r.unitPrice() >= minPrice && r.unitPrice() <= maxPrice;
     });
+}
+
+std::vector<const Resource*> Catalog::findByAuthor(const std::string& author) const {
+    std::vector<const Resource*> result;
+    for (const auto& [id, entry] : items_) {
+        const Resource* res = entry.resource.get();
+        if (res) {
+            std::ostringstream ss;
+            res->print(ss);
+            if (ss.str().find(author) != std::string::npos ||
+                res->title().find(author) != std::string::npos) {
+                result.push_back(res);
+            }
+        }
+    }
+    return result;
+}
+
+std::vector<const Resource*> Catalog::findByIsbnOrIssn(const std::string& identifier) const {
+    std::vector<const Resource*> result;
+    for (const auto& [id, entry] : items_) {
+        const Resource* res = entry.resource.get();
+        if (res) {
+            std::ostringstream ss;
+            res->print(ss);
+            if (ss.str().find(identifier) != std::string::npos) {
+                result.push_back(res);
+            }
+        }
+    }
+    return result;
+}
+
+std::vector<const Resource*> Catalog::findByYearRange(int startYear, int endYear) const {
+    std::vector<const Resource*> result;
+    for (const auto& [id, entry] : items_) {
+        const Resource* res = entry.resource.get();
+        if (res && res->year() >= startYear && res->year() <= endYear) {
+            result.push_back(res);
+        }
+    }
+    return result;
 }
 
 void Catalog::sortResults(std::vector<const Resource*>& results, SortField field, SortOrder order) {

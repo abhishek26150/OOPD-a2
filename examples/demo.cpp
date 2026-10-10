@@ -208,7 +208,15 @@ std::cout << "\n=== All-or-Nothing Batch Processing (Question 11) ===\n";
     auto vOrder = vendorAcq.purchase("B001", 1);
     std::cout << "Purchased B001 from cheapest vendor: " << vOrder.vendor 
               << " at Price: " << vOrder.cost << "\n";
-              
 
+    std::cout << "\n=== Extended Searches (Question 13) ===\n";
+    Catalog searchCat;
+    searchCat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Robert Martin"}, "978-0132350884", "Prentice", 2008, Money::of(400));
+    searchCat.emplace<Book>("B02", "Design Patterns", std::vector<std::string>{"Erich Gamma"}, "978-0201633610", "Addison", 1994, Money::of(500));
+
+    auto found = searchCat.findByYearRange(2000, 2010);
+    std::cout << "Found " << found.size() << " book(s) published between 2000-2010: " 
+              << (found.empty() ? "" : found[0]->title()) << "\n";
+              
     return 0;
 }

@@ -972,6 +972,7 @@ CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o: /workspaces/OOPD-a2/src/Catalog.cpp \
   /usr/include/c++/13/bits/hashtable_policy.h \
   /usr/include/c++/13/bits/invoke.h \
   /usr/include/c++/13/bits/ios_base.h \
+  /usr/include/c++/13/bits/istream.tcc \
   /usr/include/c++/13/bits/locale_classes.h \
   /usr/include/c++/13/bits/locale_classes.tcc \
   /usr/include/c++/13/bits/locale_facets.h \
@@ -994,6 +995,7 @@ CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o: /workspaces/OOPD-a2/src/Catalog.cpp \
   /usr/include/c++/13/bits/shared_ptr.h \
   /usr/include/c++/13/bits/shared_ptr_atomic.h \
   /usr/include/c++/13/bits/shared_ptr_base.h \
+  /usr/include/c++/13/bits/sstream.tcc \
   /usr/include/c++/13/bits/std_abs.h \
   /usr/include/c++/13/bits/std_function.h \
   /usr/include/c++/13/bits/stl_algo.h \
@@ -1048,6 +1050,7 @@ CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o: /workspaces/OOPD-a2/src/Catalog.cpp \
   /usr/include/c++/13/initializer_list \
   /usr/include/c++/13/ios \
   /usr/include/c++/13/iosfwd \
+  /usr/include/c++/13/istream \
   /usr/include/c++/13/map \
   /usr/include/c++/13/memory \
   /usr/include/c++/13/new \
@@ -1056,6 +1059,7 @@ CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o: /workspaces/OOPD-a2/src/Catalog.cpp \
   /usr/include/c++/13/pstl/glue_algorithm_defs.h \
   /usr/include/c++/13/pstl/glue_memory_defs.h \
   /usr/include/c++/13/pstl/pstl_config.h \
+  /usr/include/c++/13/sstream \
   /usr/include/c++/13/stdexcept \
   /usr/include/c++/13/streambuf \
   /usr/include/c++/13/string \

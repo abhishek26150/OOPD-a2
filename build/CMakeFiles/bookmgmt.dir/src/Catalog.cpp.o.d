@@ -189,4 +189,7 @@ CMakeFiles/bookmgmt.dir/src/Catalog.cpp.o: \
  /usr/include/c++/13/algorithm \
  /usr/include/c++/13/pstl/glue_algorithm_defs.h \
  /workspaces/OOPD-a2/include/bookmgmt/Money.h /usr/include/c++/13/cstdint \
+ /usr/include/c++/13/sstream /usr/include/c++/13/istream \
+ /usr/include/c++/13/bits/istream.tcc \
+ /usr/include/c++/13/bits/sstream.tcc \
  /workspaces/OOPD-a2/include/bookmgmt/Exceptions.h

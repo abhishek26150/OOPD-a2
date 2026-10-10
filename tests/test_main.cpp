@@ -453,6 +453,35 @@ void test_question_12_vendors() {
     CHECK(order.cost == Money::of(760));          // 380 * 2 = 760
 }
 
+
+
+void test_question_13_extended_searches() {
+    using namespace bookmgmt;
+
+    Catalog cat;
+    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Robert Martin"}, "978-0132350884", "Prentice", 2008, Money::of(400));
+    cat.emplace<Book>("B02", "Design Patterns", std::vector<std::string>{"Erich Gamma"}, "978-0201633610", "Addison", 1994, Money::of(500));
+
+    // Test Search by Author
+    auto byAuthor = cat.findByAuthor("Robert Martin");
+    CHECK(byAuthor.size() == 1);
+    CHECK(byAuthor[0]->id() == "B01");
+
+    // Test Search by ISBN
+    auto byIsbn = cat.findByIsbnOrIssn("978-0201633610");
+    CHECK(byIsbn.size() == 1);
+    CHECK(byIsbn[0]->id() == "B02");
+
+    // Test Search by Year Range
+    auto byYear = cat.findByYearRange(2000, 2010);
+    CHECK(byYear.size() == 1);
+    CHECK(byYear[0]->id() == "B01");
+}
+
+
+
+
+
 int main() {
     testMoney();
     testResourcesAndCost();
@@ -472,6 +501,7 @@ int main() {
     test_question_10_year_end_rollover();
     test_question_11_all_or_nothing_batch();
     test_question_12_vendors();
+    test_question_13_extended_searches();
 
 
     std::cout << (g_checks - g_failures) << "/" << g_checks << " checks passed\n";

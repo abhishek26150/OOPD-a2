@@ -60,6 +60,12 @@ public:
     void printDetailedReport(std::ostream& os) const;
     void exportCSV(std::ostream& os) const;
 
+        // Question 13
+
+    std::vector<const Resource*> findByAuthor(const std::string& author) const;
+    std::vector<const Resource*> findByIsbnOrIssn(const std::string& identifier) const;
+    std::vector<const Resource*> findByYearRange(int startYear, int endYear) const;
+
 private:
     struct Entry {
         std::unique_ptr<Resource> resource;
