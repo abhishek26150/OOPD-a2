@@ -149,8 +149,8 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: \
  /usr/include/c++/13/bits/basic_ios.tcc \
  /usr/include/c++/13/bits/ostream.tcc /usr/include/c++/13/istream \
  /usr/include/c++/13/bits/istream.tcc /usr/include/c++/13/sstream \
- /usr/include/c++/13/bits/sstream.tcc \
- /workspaces/OOPD-a2/include/bookmgmt/bookmgmt.h \
+ /usr/include/c++/13/bits/sstream.tcc /usr/include/c++/13/cassert \
+ /usr/include/assert.h /workspaces/OOPD-a2/include/bookmgmt/bookmgmt.h \
  /workspaces/OOPD-a2/include/bookmgmt/Resource.h \
  /usr/include/c++/13/vector /usr/include/c++/13/bits/stl_uninitialized.h \
  /usr/include/c++/13/bits/stl_vector.h \
