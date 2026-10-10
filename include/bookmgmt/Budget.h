@@ -66,7 +66,9 @@ public:
 
     Money calculateTax(ResourceCategory cat, Money baseCost) const;
     Money costWithTax(ResourceCategory cat, Money baseCost) const;
-
+    
+    void refund(ResourceCategory c, int units, Money cost, const std::string& resourceId = "");
+    
 private:
     Money total_;
     Money spent_ = Money::of(0);

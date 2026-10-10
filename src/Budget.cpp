@@ -190,4 +190,20 @@ Money Budget::costWithTax(ResourceCategory cat, Money baseCost) const {
     return baseCost + calculateTax(cat, baseCost);
 }
 
+void Budget::refund(ResourceCategory c, int units, Money cost, const std::string& resourceId) {
+    if (units <= 0) return;
+
+    spent_ -= cost;
+    if (spent_.isNegative()) spent_ = Money::of(0);
+
+    auto& u = usage_[c];
+    u.units -= units;
+    if (u.units < 0) u.units = 0;
+
+    u.spent -= cost;
+    if (u.spent.isNegative()) u.spent = Money::of(0);
+
+    (void)resourceId;
+}
+
 }  // namespace bookmgmt

@@ -1,6 +1,4 @@
 #pragma once
-// AcquisitionManager: turns purchase requests into orders, enforcing the
-// Budget's quotas, updating Catalog holdings and keeping an order history.
 
 #include <iosfwd>
 #include <string>
@@ -13,7 +11,7 @@ namespace bookmgmt {
 
 struct PurchaseRequest {
     std::string resourceId;
-    int quantity;  // copies for print, seats for electronic
+    int quantity;
 };
 
 struct PurchaseRecord {
@@ -25,28 +23,24 @@ struct PurchaseRecord {
     Money cost;
     bool approved;
     std::string reason;  // why it was rejected; empty if approved
+    bool isCancellation = false; // Question 8: Cancellation record flag
 };
 
 class AcquisitionManager {
 public:
     AcquisitionManager(Catalog& catalog, Budget& budget);
 
-    // Price of a request without buying anything. Throws NotFoundError.
     Money quote(const std::string& id, int quantity) const;
 
-    // True if the purchase would be approved; if not, `reason` explains why.
     bool canPurchase(const std::string& id, int quantity,
                      std::string* reason = nullptr) const;
 
-    // Buys immediately. Throws NotFoundError, QuotaExceededError,
-    // BudgetExceededError or std::invalid_argument. On success the budget
-    // and holdings are updated and the record is added to history.
     const PurchaseRecord& purchase(const std::string& id, int quantity);
 
-    // Processes requests in order; each is approved or rejected on its own
-    // (never throws for a rejected request). Every outcome is recorded.
-    // EXTENSION POINT: priority ordering, all-or-nothing batches, ...
     std::vector<PurchaseRecord> processBatch(const std::vector<PurchaseRequest>& reqs);
+
+    // Question 8: Order cancellation
+    PurchaseRecord cancelOrder(int orderNo);
 
     const std::vector<PurchaseRecord>& history() const { return history_; }
     Money totalSpent() const;

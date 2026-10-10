@@ -134,5 +134,18 @@ std::cout << "\n=== Title Limit Quota (Question 7) ===\n";
     if (status != Budget::Failure::None) {
         std::cout << "  Reason: " << reason << "\n";
     }
+
+
+    std::cout << "\n=== Order Cancellation (Question 8) ===\n";
+    Catalog cancelCat;
+    cancelCat.emplace<Book>("B999", "Refactoring", std::vector<std::string>{"Fowler"}, "999", "Addison", 2018, Money::of(500));
+    Budget cancelBudget(Money::of(5000));
+    AcquisitionManager cancelAcq(cancelCat, cancelBudget);
+
+    auto ord = cancelAcq.purchase("B999", 2);
+    std::cout << "Purchased Order #" << ord.orderNo << " (Spent: " << cancelBudget.spent() << ", Holdings: " << cancelCat.holdings("B999") << ")\n";
+
+    cancelAcq.cancelOrder(ord.orderNo);
+    std::cout << "After Cancelling Order #" << ord.orderNo << ": Spent: " << cancelBudget.spent() << ", Holdings: " << cancelCat.holdings("B999") << "\n";
     return 0;
 }

@@ -331,6 +331,35 @@ void test_question_7_title_limit_quota() {
 }
 
 
+void test_question_8_cancellation() {
+    using namespace bookmgmt;
+
+    Catalog cat;
+    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(400));
+    Budget budget(Money::of(2000));
+    budget.setQuota(ResourceCategory::Book, Quota{5, Money::of(2000)});
+    AcquisitionManager acq(cat, budget);
+
+    // 1. Purchase order #1
+    auto order = acq.purchase("B01", 3);
+    CHECK(order.orderNo == 1);
+    CHECK(cat.holdings("B01") == 3);
+    CHECK(budget.spent() == Money::of(1200));
+
+    // 2. Cancel order #1 (Generates Order #2)
+    auto cancelRec = acq.cancelOrder(1);
+    CHECK(cancelRec.orderNo == 2);
+    CHECK(cancelRec.approved == true);
+    CHECK(cancelRec.isCancellation == true);
+    
+    // 3. Verify holdings and budget refund
+    CHECK(cat.holdings("B01") == 0);
+    CHECK(budget.spent() == Money::of(0));
+    CHECK(acq.history().size() == 2);
+}
+
+
+
 int main() {
     testMoney();
     testResourcesAndCost();
@@ -345,6 +374,7 @@ int main() {
     test_question_5_reports_and_export();
     test_question_6_taxes();
     test_question_7_title_limit_quota();
+    test_question_8_cancellation();
 
 
     std::cout << (g_checks - g_failures) << "/" << g_checks << " checks passed\n";
