@@ -300,36 +300,34 @@ void test_question_6_taxes() {
     CHECK(elecPostTax == Money::of(1050));
 }
 
-void test_question_7_sorting_and_queries() {
+void test_question_7_title_limit_quota() {
     using namespace bookmgmt;
 
-    Catalog catalog;
-    catalog.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(450));
-    catalog.emplace<Book>("B02", "The C++ Programming Language", std::vector<std::string>{"Stroustrup"}, "456", "Pearson", 2013, Money::of(1200));
-    catalog.emplace<ElectronicResource>("R01", "IEEE Xplore", "IEEE", 2026, Money::of(150), "https://link", LicenseModel::AnnualSubscription, Money::of(2000));
+    Budget budget(Money::of(10000));
+    Quota q;
+    q.maxUnits = 10;
+    q.maxSpend = Money::of(5000);
+    q.maxTitles = 2; // Only 2 distinct titles allowed for Book
 
-    // Case-insensitive title search
-    auto codeResults = catalog.searchTitle("code");
-    CHECK(codeResults.size() == 1);
-    CHECK(codeResults[0]->id() == "B01");
+    budget.setQuota(ResourceCategory::Book, q);
 
-    // Price range filtering
-    auto cheapItems = catalog.byPriceRange(Money::of(100), Money::of(500));
-    CHECK(cheapItems.size() == 2); // B01 (450) and R01 (150)
+    // First title: B01 -> Allowed
+    budget.commit(ResourceCategory::Book, 2, Money::of(500), "B01");
+    CHECK(budget.usageFor(ResourceCategory::Book).distinctTitles() == 1);
 
-    // Category filtering
-    auto books = catalog.byCategory(ResourceCategory::Book);
-    CHECK(books.size() == 2);
+    // Same title B01 again -> Allowed (doesn't increase distinct title count)
+    budget.commit(ResourceCategory::Book, 1, Money::of(250), "B01");
+    CHECK(budget.usageFor(ResourceCategory::Book).distinctTitles() == 1);
 
-    // Sorting results
-    auto allItems = catalog.all();
-    Catalog::sortResults(allItems, SortField::UnitPrice, SortOrder::Ascending);
-    CHECK(allItems[0]->id() == "R01"); // 150
-    CHECK(allItems[1]->id() == "B01"); // 450
-    CHECK(allItems[2]->id() == "B02"); // 1200
+    // Second distinct title: B02 -> Allowed
+    budget.commit(ResourceCategory::Book, 1, Money::of(300), "B02");
+    CHECK(budget.usageFor(ResourceCategory::Book).distinctTitles() == 2);
 
-    Catalog::sortResults(allItems, SortField::UnitPrice, SortOrder::Descending);
-    CHECK(allItems[0]->id() == "B02"); // 1200
+    // Third distinct title: B03 -> Exceeds title quota!
+    std::string why;
+    auto failure = budget.evaluate(ResourceCategory::Book, 1, Money::of(100), "B03", why);
+    CHECK(failure == Budget::Failure::Quota);
+    CHECK(why.find("title quota exceeded") != std::string::npos);
 }
 
 
@@ -346,8 +344,7 @@ int main() {
     test_question_4_catalog_queries();
     test_question_5_reports_and_export();
     test_question_6_taxes();
-    test_question_7_sorting_and_queries();
-
+    test_question_7_title_limit_quota();
 
 
     std::cout << (g_checks - g_failures) << "/" << g_checks << " checks passed\n";

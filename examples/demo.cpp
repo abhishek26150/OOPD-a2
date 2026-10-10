@@ -94,6 +94,8 @@ catalog.emplace<Thesis>("TH301", "Scalable Consensus Algorithms", "Rohan Sharma"
         acq.purchase("B002", 1);
     } catch (const QuotaExceededError& e) {
         std::cout << "QuotaExceededError: " << e.what() << "\n";
+    } catch (const BudgetExceededError& e) {
+        std::cout << "BudgetExceededError: " << e.what() << "\n";
     }
 
     std::cout << "\n=== Export CSV (Question 5) ===\n";
@@ -116,18 +118,21 @@ std::cout << "Print Item (10% tax): Tax = " << printTax << ", Total = " << print
 std::cout << "Electronic Item (5% tax): Tax = " << elecTax << ", Total = " << elecTotal << "\n";
 
 
-std::cout << "\n=== Search, Filtering & Sorting (Question 7) ===\n";
-    auto codeBooks = catalog.searchTitle("code");
-    std::cout << "Search 'code': Found " << codeBooks.size() << " item(s)\n";
-    for (const auto* r : codeBooks) {
-        std::cout << "  - " << r->id() << ": " << r->title() << " (" << r->year() << ")\n";
-    }
+std::cout << "\n=== Title Limit Quota (Question 7) ===\n";
+    Budget titleBudget(Money::of(10000));
+    Quota titleQuota;
+    titleQuota.maxTitles = 2; // Max 2 distinct titles allowed
+    titleBudget.setQuota(ResourceCategory::Book, titleQuota);
 
-    auto cheapItems = catalog.byPriceRange(Money::of(100), Money::of(500));
-    std::cout << "\nItems in price range 100.00 - 500.00 (Sorted Ascending by Unit Price):\n";
-    Catalog::sortResults(cheapItems, SortField::UnitPrice, SortOrder::Ascending);
-    for (const auto* r : cheapItems) {
-        std::cout << "  - " << r->id() << ": " << r->title() << " @ " << r->unitPrice() << "\n";
+    titleBudget.commit(ResourceCategory::Book, 2, Money::of(900), "B001");
+    titleBudget.commit(ResourceCategory::Book, 1, Money::of(1200), "B002");
+
+    std::string reason;
+    auto status = titleBudget.evaluate(ResourceCategory::Book, 1, Money::of(450), "B003", reason);
+    std::cout << "Attempting to buy 3rd distinct title (B003): " 
+              << (status == Budget::Failure::None ? "APPROVED" : "REJECTED") << "\n";
+    if (status != Budget::Failure::None) {
+        std::cout << "  Reason: " << reason << "\n";
     }
     return 0;
 }

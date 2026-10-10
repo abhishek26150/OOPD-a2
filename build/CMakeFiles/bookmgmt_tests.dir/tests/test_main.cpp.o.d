@@ -171,6 +171,8 @@ CMakeFiles/bookmgmt_tests.dir/tests/test_main.cpp.o: \
  /usr/include/c++/13/bits/stl_multimap.h \
  /usr/include/c++/13/bits/erase_if.h /usr/include/c++/13/optional \
  /usr/include/c++/13/bits/enable_special_members.h \
+ /usr/include/c++/13/set /usr/include/c++/13/bits/stl_set.h \
+ /usr/include/c++/13/bits/stl_multiset.h \
  /workspaces/OOPD-a2/include/bookmgmt/Catalog.h \
  /usr/include/c++/13/functional /usr/include/c++/13/bits/std_function.h \
  /usr/include/c++/13/unordered_map \

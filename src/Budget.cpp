@@ -1,148 +1,187 @@
 #include "bookmgmt/Budget.h"
+#include "bookmgmt/Resource.h"
 
+#include <algorithm>
 #include <cmath>
 #include <iomanip>
-#include <ostream>
+#include <sstream>
 #include <stdexcept>
+#include <vector>
 
 #include "bookmgmt/Exceptions.h"
 
 namespace bookmgmt {
 
-namespace {
-
-const ResourceCategory kAllCategories[] = {
-    ResourceCategory::Book,
-    ResourceCategory::ElectronicResource,
-    ResourceCategory::Journal,
-    ResourceCategory::EBook,
-    ResourceCategory::AudioBook,
-    ResourceCategory::Thesis
-};
-
-bool isPrintCategory(ResourceCategory cat) {
-    return cat == ResourceCategory::Book || 
-           cat == ResourceCategory::Journal || 
-           cat == ResourceCategory::Thesis;
+// Helper to identify print categories for tax rate selection
+static bool isPrintCategory(ResourceCategory cat) {
+    return cat == ResourceCategory::Book || cat == ResourceCategory::Journal;
 }
 
-}  // namespace
-
 Budget::Budget(Money total) : total_(total) {
-    if (total_.isNegative()) throw std::invalid_argument("budget must not be negative");
+    if (total.isNegative()) {
+        throw std::invalid_argument("Total budget cannot be negative");
+    }
 }
 
 void Budget::setQuota(ResourceCategory c, Quota q) {
-    if (q.maxUnits < 0 || q.maxSpend.isNegative())
-        throw std::invalid_argument("quota limits must not be negative");
     quotas_[c] = q;
 }
 
-void Budget::removeQuota(ResourceCategory c) { quotas_.erase(c); }
+void Budget::removeQuota(ResourceCategory c) {
+    quotas_.erase(c);
+}
 
 std::optional<Quota> Budget::quotaFor(ResourceCategory c) const {
     auto it = quotas_.find(c);
-    if (it == quotas_.end()) return std::nullopt;
-    return it->second;
+    if (it != quotas_.end()) {
+        return it->second;
+    }
+    return std::nullopt;
 }
 
 Usage Budget::usageFor(ResourceCategory c) const {
     auto it = usage_.find(c);
-    return it == usage_.end() ? Usage{} : it->second;
+    if (it != usage_.end()) {
+        return it->second;
+    }
+    return Usage{};
 }
 
 std::optional<int> Budget::unitsRemaining(ResourceCategory c) const {
     auto q = quotaFor(c);
-    if (!q) return std::nullopt;
-    return q->maxUnits - usageFor(c).units;
+    if (!q || q->maxUnits < 0) return std::nullopt;
+    int used = usageFor(c).units;
+    return std::max(0, q->maxUnits - used);
 }
 
 std::optional<Money> Budget::spendRemaining(ResourceCategory c) const {
     auto q = quotaFor(c);
-    if (!q) return std::nullopt;
-    return q->maxSpend - usageFor(c).spent;
+    if (!q || q->maxSpend.isNegative()) return std::nullopt;
+    Money used = usageFor(c).spent;
+    if (used >= q->maxSpend) return Money::of(0);
+    return q->maxSpend - used;
 }
 
-Budget::Failure Budget::evaluate(ResourceCategory c, int units, Money baseCost,
+std::optional<int> Budget::titlesRemaining(ResourceCategory c) const {
+    auto q = quotaFor(c);
+    if (!q || q->maxTitles < 0) return std::nullopt;
+    int distinct = usageFor(c).distinctTitles();
+    return std::max(0, q->maxTitles - distinct);
+}
+
+Budget::Failure Budget::evaluate(ResourceCategory c, int units, Money cost,
                                  std::string& why) const {
-    if (units <= 0) {
-        why = "quantity must be positive";
-        return Failure::BadInput;
-    }
-    if (baseCost.isNegative()) {
-        why = "cost must not be negative";
+    return evaluate(c, units, cost, "", why);
+}
+
+Budget::Failure Budget::evaluate(ResourceCategory c, int units, Money cost,
+                                 const std::string& resourceId, std::string& why) const {
+    why.clear();
+    if (units <= 0 || cost.isNegative()) {
+        why = "Invalid units or negative cost";
         return Failure::BadInput;
     }
 
-    // Apply post-tax cost calculation for evaluation
-    Money cost = costWithTax(c, baseCost);
-
-    if (auto left = unitsRemaining(c); left && units > *left) {
-        why = std::string(categoryName(c)) + " unit quota exceeded: requested " +
-              std::to_string(units) + ", " + std::to_string(*left) + " remaining";
-        return Failure::Quota;
-    }
-    if (auto left = spendRemaining(c); left && cost > *left) {
-        why = std::string(categoryName(c)) + " spend quota exceeded: cost " +
-              cost.toString() + ", " + left->toString() + " remaining";
-        return Failure::Quota;
-    }
-    if (cost > remaining()) {
-        why = "overall budget exceeded: cost " + cost.toString() + ", " +
-              remaining().toString() + " remaining";
+    if (spent_ + cost > total_) {
+        std::ostringstream ss;
+        ss << "Overall budget exceeded: cost " << cost << ", " << remaining() << " remaining";
+        why = ss.str();
         return Failure::Overall;
     }
-    why.clear();
+
+    auto q = quotaFor(c);
+    if (q) {
+        Usage u = usageFor(c);
+
+        if (q->maxUnits >= 0 && u.units + units > q->maxUnits) {
+            std::ostringstream ss;
+            ss << categoryName(c) << " unit quota exceeded: requested " << units
+               << ", " << (q->maxUnits - u.units) << " remaining";
+            why = ss.str();
+            return Failure::Quota;
+        }
+
+        if (!q->maxSpend.isNegative() && u.spent + cost > q->maxSpend) {
+            std::ostringstream ss;
+            ss << categoryName(c) << " spend quota exceeded: cost " << cost
+               << ", " << (q->maxSpend - u.spent) << " remaining";
+            why = ss.str();
+            return Failure::Quota;
+        }
+
+        // Question 7: Check distinct title limit
+        if (q->maxTitles >= 0 && !resourceId.empty()) {
+            bool isNewTitle = u.purchasedResourceIds.find(resourceId) == u.purchasedResourceIds.end();
+            if (isNewTitle && u.distinctTitles() >= q->maxTitles) {
+                std::ostringstream ss;
+                ss << categoryName(c) << " title quota exceeded: max " << q->maxTitles << " titles allowed";
+                why = ss.str();
+                return Failure::Quota;
+            }
+        }
+    }
+
     return Failure::None;
 }
 
-std::string Budget::check(ResourceCategory c, int units, Money cost) const {
+std::string Budget::check(ResourceCategory c, int units, Money cost, const std::string& resourceId) const {
     std::string why;
-    evaluate(c, units, cost, why);
+    evaluate(c, units, cost, resourceId, why);
     return why;
 }
 
-void Budget::commit(ResourceCategory c, int units, Money baseCost) {
+void Budget::commit(ResourceCategory c, int units, Money cost, const std::string& resourceId) {
     std::string why;
-    switch (evaluate(c, units, baseCost, why)) {
-        case Failure::None: break;
-        case Failure::BadInput: throw std::invalid_argument(why);
-        case Failure::Quota: throw QuotaExceededError(why);
-        case Failure::Overall: throw BudgetExceededError(why);
+    Failure f = evaluate(c, units, cost, resourceId, why);
+    if (f == Failure::Quota) {
+        throw QuotaExceededError(why);
+    } else if (f == Failure::Overall) {
+        throw BudgetExceededError(why);
+    } else if (f == Failure::BadInput) {
+        throw std::invalid_argument(why);
     }
-    
-    // Deduct total post-tax cost from budget
-    Money totalCost = costWithTax(c, baseCost);
-    Usage& u = usage_[c];
+
+    spent_ += cost;
+    auto& u = usage_[c];
     u.units += units;
-    u.spent += totalCost;
-    spent_ += totalCost;
+    u.spent += cost;
+    if (!resourceId.empty()) {
+        u.purchasedResourceIds.insert(resourceId);
+    }
 }
 
 void Budget::print(std::ostream& os) const {
-    os << "Budget: total " << total_ << ", spent " << spent_ << ", remaining "
-       << remaining() << "\n";
-    os << std::left << std::setw(22) << "  Category" << std::setw(18) << "Units used/max"
-       << "Spend used/max\n";
-    for (ResourceCategory c : kAllCategories) {
-        const Usage u = usageFor(c);
-        const auto q = quotaFor(c);
-        const std::string units =
-            std::to_string(u.units) + "/" + (q ? std::to_string(q->maxUnits) : "-");
-        const std::string spend =
-            u.spent.toString() + "/" + (q ? q->maxSpend.toString() : "-");
-        os << "  " << std::setw(20) << categoryName(c) << std::setw(18) << units << spend
-           << "\n";
+    os << "Budget: total " << total_ << ", spent " << spent_ << ", remaining " << remaining() << "\n";
+    os << "  Category            Units used/max    Spend used/max\n";
+
+    static const std::vector<ResourceCategory> categories = {
+        ResourceCategory::Book,
+        ResourceCategory::ElectronicResource,
+        ResourceCategory::Journal,
+        ResourceCategory::EBook,
+        ResourceCategory::AudioBook,
+        ResourceCategory::Thesis
+    };
+
+    for (ResourceCategory cat : categories) {
+        Usage u = usageFor(cat);
+        auto q = quotaFor(cat);
+
+        std::string unitsStr = std::to_string(u.units) + "/";
+        unitsStr += (q && q->maxUnits >= 0) ? std::to_string(q->maxUnits) : "-";
+
+        std::string spendStr = u.spent.toString() + "/";
+        spendStr += (q && !q->maxSpend.isNegative()) ? q->maxSpend.toString() : "-";
+
+        os << "  " << std::left << std::setw(20) << categoryName(cat)
+           << std::setw(18) << unitsStr
+           << spendStr << "\n";
     }
 }
 
-// ==========================================
 // Question 6: Tax Calculations Implementation
-// ==========================================
-
 Money Budget::calculateTax(ResourceCategory cat, Money baseCost) const {
     double rate = isPrintCategory(cat) ? printTaxRate_ : electronicTaxRate_;
-    // baseCost.minorUnits() gives total minor units (paise/cents)
     std::int64_t taxMinor = static_cast<std::int64_t>(std::round(baseCost.minorUnits() * rate));
     return Money::fromMinor(taxMinor);
 }

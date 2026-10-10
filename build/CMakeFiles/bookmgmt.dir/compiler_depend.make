@@ -80,8 +80,10 @@ CMakeFiles/bookmgmt.dir/src/Acquisition.cpp.o: /workspaces/OOPD-a2/src/Acquisiti
   /usr/include/c++/13/bits/stl_iterator_base_types.h \
   /usr/include/c++/13/bits/stl_map.h \
   /usr/include/c++/13/bits/stl_multimap.h \
+  /usr/include/c++/13/bits/stl_multiset.h \
   /usr/include/c++/13/bits/stl_pair.h \
   /usr/include/c++/13/bits/stl_raw_storage_iter.h \
+  /usr/include/c++/13/bits/stl_set.h \
   /usr/include/c++/13/bits/stl_tempbuf.h \
   /usr/include/c++/13/bits/stl_tree.h \
   /usr/include/c++/13/bits/stl_uninitialized.h \
@@ -133,6 +135,7 @@ CMakeFiles/bookmgmt.dir/src/Acquisition.cpp.o: /workspaces/OOPD-a2/src/Acquisiti
   /usr/include/c++/13/pstl/execution_defs.h \
   /usr/include/c++/13/pstl/glue_memory_defs.h \
   /usr/include/c++/13/pstl/pstl_config.h \
+  /usr/include/c++/13/set \
   /usr/include/c++/13/sstream \
   /usr/include/c++/13/stdexcept \
   /usr/include/c++/13/streambuf \
@@ -659,8 +662,10 @@ CMakeFiles/bookmgmt.dir/src/Budget.cpp.o: /workspaces/OOPD-a2/src/Budget.cpp \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
+  /usr/include/c++/13/algorithm \
   /usr/include/c++/13/backward/binders.h \
   /usr/include/c++/13/bit \
+  /usr/include/c++/13/bits/algorithmfwd.h \
   /usr/include/c++/13/bits/alloc_traits.h \
   /usr/include/c++/13/bits/allocator.h \
   /usr/include/c++/13/bits/basic_ios.h \
@@ -711,23 +716,33 @@ CMakeFiles/bookmgmt.dir/src/Budget.cpp.o: /workspaces/OOPD-a2/src/Budget.cpp \
   /usr/include/c++/13/bits/specfun.h \
   /usr/include/c++/13/bits/sstream.tcc \
   /usr/include/c++/13/bits/std_abs.h \
+  /usr/include/c++/13/bits/stl_algo.h \
   /usr/include/c++/13/bits/stl_algobase.h \
+  /usr/include/c++/13/bits/stl_bvector.h \
   /usr/include/c++/13/bits/stl_construct.h \
   /usr/include/c++/13/bits/stl_function.h \
+  /usr/include/c++/13/bits/stl_heap.h \
   /usr/include/c++/13/bits/stl_iterator.h \
   /usr/include/c++/13/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/13/bits/stl_iterator_base_types.h \
   /usr/include/c++/13/bits/stl_map.h \
   /usr/include/c++/13/bits/stl_multimap.h \
+  /usr/include/c++/13/bits/stl_multiset.h \
   /usr/include/c++/13/bits/stl_pair.h \
+  /usr/include/c++/13/bits/stl_set.h \
+  /usr/include/c++/13/bits/stl_tempbuf.h \
   /usr/include/c++/13/bits/stl_tree.h \
+  /usr/include/c++/13/bits/stl_uninitialized.h \
+  /usr/include/c++/13/bits/stl_vector.h \
   /usr/include/c++/13/bits/streambuf.tcc \
   /usr/include/c++/13/bits/streambuf_iterator.h \
   /usr/include/c++/13/bits/string_view.tcc \
   /usr/include/c++/13/bits/stringfwd.h \
+  /usr/include/c++/13/bits/uniform_int_dist.h \
   /usr/include/c++/13/bits/uses_allocator.h \
   /usr/include/c++/13/bits/uses_allocator_args.h \
   /usr/include/c++/13/bits/utility.h \
+  /usr/include/c++/13/bits/vector.tcc \
   /usr/include/c++/13/cctype \
   /usr/include/c++/13/cerrno \
   /usr/include/c++/13/clocale \
@@ -759,7 +774,10 @@ CMakeFiles/bookmgmt.dir/src/Budget.cpp.o: /workspaces/OOPD-a2/src/Budget.cpp \
   /usr/include/c++/13/new \
   /usr/include/c++/13/optional \
   /usr/include/c++/13/ostream \
+  /usr/include/c++/13/pstl/execution_defs.h \
+  /usr/include/c++/13/pstl/glue_algorithm_defs.h \
   /usr/include/c++/13/pstl/pstl_config.h \
+  /usr/include/c++/13/set \
   /usr/include/c++/13/sstream \
   /usr/include/c++/13/stdexcept \
   /usr/include/c++/13/streambuf \
@@ -781,6 +799,7 @@ CMakeFiles/bookmgmt.dir/src/Budget.cpp.o: /workspaces/OOPD-a2/src/Budget.cpp \
   /usr/include/c++/13/tuple \
   /usr/include/c++/13/type_traits \
   /usr/include/c++/13/typeinfo \
+  /usr/include/c++/13/vector \
   /usr/include/ctype.h \
   /usr/include/endian.h \
   /usr/include/errno.h \
@@ -2314,10 +2333,6 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 
 /workspaces/OOPD-a2/include/bookmgmt/EBook.h:
 
-/usr/include/c++/13/pstl/glue_algorithm_defs.h:
-
-/usr/include/c++/13/algorithm:
-
 /usr/include/x86_64-linux-gnu/bits/mathcalls.h:
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h:
@@ -2350,7 +2365,17 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 
 /usr/include/c++/13/tr1/beta_function.tcc:
 
+/usr/include/c++/13/pstl/glue_algorithm_defs.h:
+
 /usr/include/c++/13/cmath:
+
+/usr/include/c++/13/algorithm:
+
+/workspaces/OOPD-a2/include/bookmgmt/Book.h:
+
+/workspaces/OOPD-a2/src/Budget.cpp:
+
+/usr/include/c++/13/bits/refwrap.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
@@ -2361,6 +2386,8 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 /usr/include/c++/13/bits/uses_allocator.h:
 
 /usr/include/c++/13/bits/std_abs.h:
+
+/usr/include/c++/13/bits/stl_multiset.h:
 
 /usr/include/c++/13/bits/postypes.h:
 
@@ -2418,14 +2445,6 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 
 /usr/include/c++/13/bits/streambuf.tcc:
 
-/usr/include/c++/13/memory:
-
-/usr/include/x86_64-linux-gnu/bits/floatn.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
-
-/usr/include/x86_64-linux-gnu/c++/13/bits/c++allocator.h:
-
 /usr/include/c++/13/bits/unordered_map.h:
 
 /usr/include/c++/13/bits/quoted_string.h:
@@ -2452,10 +2471,6 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 
 /usr/include/x86_64-linux-gnu/c++/13/bits/messages_members.h:
 
-/usr/include/c++/13/new:
-
-/usr/include/c++/13/ext/alloc_traits.h:
-
 /usr/include/c++/13/bits/stl_heap.h:
 
 /usr/include/c++/13/bits/stl_construct.h:
@@ -2475,8 +2490,6 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 /usr/include/c++/13/bits/sstream.tcc:
 
 /usr/include/c++/13/cwctype:
-
-/usr/include/c++/13/bits/shared_ptr_atomic.h:
 
 /usr/include/c++/13/bits/erase_if.h:
 
@@ -2608,6 +2621,10 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 
 /usr/include/c++/13/bits/algorithmfwd.h:
 
+/usr/include/c++/13/ext/alloc_traits.h:
+
+/usr/include/c++/13/new:
+
 /usr/include/c++/13/bits/stl_vector.h:
 
 /usr/include/c++/13/bits/stl_tempbuf.h:
@@ -2628,8 +2645,6 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 
 /usr/include/c++/13/array:
 
-/workspaces/OOPD-a2/include/bookmgmt/Book.h:
-
 /usr/include/c++/13/bits/stl_iterator_base_funcs.h:
 
 /usr/include/asm-generic/errno-base.h:
@@ -2639,6 +2654,8 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 /usr/include/x86_64-linux-gnu/bits/types/error_t.h:
 
 /usr/include/c++/13/bits/hashtable.h:
+
+/usr/include/c++/13/bits/stl_set.h:
 
 /usr/include/c++/13/bits/ostream_insert.h:
 
@@ -2670,11 +2687,23 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 
 /usr/include/c++/13/bits/locale_facets_nonio.tcc:
 
+/usr/include/c++/13/memory:
+
+/usr/include/x86_64-linux-gnu/bits/floatn.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
+
+/usr/include/x86_64-linux-gnu/c++/13/bits/c++allocator.h:
+
 /usr/include/c++/13/exception:
 
 /usr/include/c++/13/pstl/glue_memory_defs.h:
 
 /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
+
+/usr/include/c++/13/bits/shared_ptr_atomic.h:
+
+/usr/include/c++/13/set:
 
 /usr/include/c++/13/stdexcept:
 
@@ -2820,6 +2849,12 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
 
+/usr/include/c++/13/ext/atomicity.h:
+
+/workspaces/OOPD-a2/src/AudioBook.cpp:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/time_t.h:
 
 /workspaces/OOPD-a2/include/bookmgmt/AudioBook.h:
@@ -2870,19 +2905,9 @@ CMakeFiles/bookmgmt.dir/src/Thesis.cpp.o: /workspaces/OOPD-a2/src/Thesis.cpp \
 
 /workspaces/OOPD-a2/include/bookmgmt/Budget.h:
 
-/usr/include/c++/13/bits/refwrap.h:
-
-/workspaces/OOPD-a2/src/Budget.cpp:
-
 /workspaces/OOPD-a2/include/bookmgmt/Catalog.h:
 
 /workspaces/OOPD-a2/include/bookmgmt/Exceptions.h:
-
-/usr/include/c++/13/ext/atomicity.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
-
-/workspaces/OOPD-a2/src/AudioBook.cpp:
 
 /usr/include/c++/13/iostream:
 
