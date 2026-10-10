@@ -68,7 +68,10 @@ public:
     Money costWithTax(ResourceCategory cat, Money baseCost) const;
     
     void refund(ResourceCategory c, int units, Money cost, const std::string& resourceId = "");
-    
+
+    // Question 10: Create next year's budget with unspent rollover carryover %
+    static Budget createRollover(const Budget& currentBudget, double carryForwardPercent);
+
 private:
     Money total_;
     Money spent_ = Money::of(0);

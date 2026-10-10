@@ -164,6 +164,18 @@ std::cout << "\n=== Title Limit Quota (Question 7) ===\n";
               << " to [" << ordDept.department << "]. Dept Spent: " << csB->spent() << "\n";
 
 
+    std::cout << "\n=== Year-End Budget Rollover (Question 10) ===\n";
+    Budget budget2025(Money::of(10000));
+    budget2025.commit(ResourceCategory::Book, 2, Money::of(4000)); // Spent 4000, unspent 6000
+
+    std::cout << "2025 Budget: Total " << budget2025.total() << ", Spent " << budget2025.spent() 
+              << ", Remaining " << budget2025.remaining() << "\n";
+
+    // Carry forward 50% of remaining 6000 = +3000
+    Budget budget2026 = Budget::createRollover(budget2025, 50.0);
+    std::cout << "2026 Budget (after 50% rollover): Total " << budget2026.total() 
+              << ", Spent " << budget2026.spent() << ", Remaining " << budget2026.remaining() << "\n";          
+
 
     return 0;
 }

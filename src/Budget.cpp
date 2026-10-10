@@ -206,4 +206,43 @@ void Budget::refund(ResourceCategory c, int units, Money cost, const std::string
     (void)resourceId;
 }
 
+Budget Budget::createRollover(const Budget& currentBudget, double carryForwardPercent) {
+    if (carryForwardPercent < 0.0 || carryForwardPercent > 100.0) {
+        throw std::invalid_argument("Carry forward percentage must be between 0 and 100");
+    }
+
+    Money unspent = currentBudget.remaining();
+    std::int64_t carryMinor = static_cast<std::int64_t>(
+        std::round(unspent.minorUnits() * (carryForwardPercent / 100.0))
+    );
+    Money carryForward = Money::fromMinor(carryMinor);
+
+    // Next year's total budget = original total + carried forward unspent money
+    Money nextTotal = currentBudget.total() + carryForward;
+    Budget nextBudget(nextTotal);
+
+    static const std::vector<ResourceCategory> categories = {
+        ResourceCategory::Book,
+        ResourceCategory::ElectronicResource,
+        ResourceCategory::Journal,
+        ResourceCategory::EBook,
+        ResourceCategory::AudioBook,
+        ResourceCategory::Thesis
+    };
+
+    // Carry forward quotas configuration
+    for (ResourceCategory cat : categories) {
+        auto q = currentBudget.quotaFor(cat);
+        if (q) {
+            nextBudget.setQuota(cat, *q);
+        }
+    }
+
+    // Carry forward tax settings
+    nextBudget.setPrintTaxRate(currentBudget.printTaxRate());
+    nextBudget.setElectronicTaxRate(currentBudget.electronicTaxRate());
+
+    return nextBudget;
+}
+
 }  // namespace bookmgmt

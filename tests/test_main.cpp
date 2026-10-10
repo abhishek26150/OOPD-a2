@@ -357,18 +357,17 @@ void test_question_8_cancellation() {
     CHECK(budget.spent() == Money::of(0));
     CHECK(acq.history().size() == 2);
 }
-
 void test_question_9_department_budgets() {
     using namespace bookmgmt;
 
     Catalog cat;
-    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(500));
+    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(100));
     
     Budget mainBudget(Money::of(10000));
     AcquisitionManager acq(cat, mainBudget);
 
-    auto csBudget = std::make_shared<Budget>(Money::of(1000));
-    csBudget->setQuota(ResourceCategory::Book, Quota{2, Money::of(1000)});
+    auto csBudget = std::make_shared<Budget>(Money::of(10000));
+    csBudget->setQuota(ResourceCategory::Book, Quota{2, Money::of(5000)});
     
     acq.addDepartmentBudget("CS", csBudget);
 
@@ -376,13 +375,36 @@ void test_question_9_department_budgets() {
     auto order1 = acq.purchase("B01", 1, "CS");
     CHECK(order1.approved == true);
     CHECK(order1.department == "CS");
-    CHECK(csBudget->spent() == Money::of(500));
+    CHECK(csBudget->spent() == Money::of(100));
 
-    // Exceed CS department quota (buying 2 more = 3 total, max 2 allowed)
+    // Exceed CS unit quota (buying 2 more = 3 total, max 2 allowed)
     std::string reason;
     bool can = acq.canPurchase("B01", 2, "CS", &reason);
     CHECK(can == false);
     CHECK(reason.find("unit quota exceeded") != std::string::npos);
+}
+
+void test_question_10_year_end_rollover() {
+    using namespace bookmgmt;
+
+    Budget budget2025(Money::of(10000));
+    budget2025.setQuota(ResourceCategory::Book, Quota{5, Money::of(8000)});
+    
+    // Spend 6000, remaining = 4000
+    budget2025.commit(ResourceCategory::Book, 2, Money::of(6000));
+    CHECK(budget2025.remaining() == Money::of(4000));
+
+    // Carry forward 50% of unspent amount (50% of 4000 = 2000)
+    Budget budget2026 = Budget::createRollover(budget2025, 50.0);
+
+    CHECK(budget2026.total() == Money::of(12000)); // 10000 + 2000
+    CHECK(budget2026.spent() == Money::of(0));     // Spent reset for new year
+    CHECK(budget2026.remaining() == Money::of(12000));
+    
+    // Verify quota carries over
+    auto q = budget2026.quotaFor(ResourceCategory::Book);
+    CHECK(q.has_value());
+    CHECK(q->maxUnits == 5);
 }
 
 int main() {
@@ -400,6 +422,8 @@ int main() {
     test_question_6_taxes();
     test_question_7_title_limit_quota();
     test_question_8_cancellation();
+    test_question_9_department_budgets();
+    test_question_10_year_end_rollover();
 
 
     std::cout << (g_checks - g_failures) << "/" << g_checks << " checks passed\n";
