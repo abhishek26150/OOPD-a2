@@ -6,12 +6,13 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "bookmgmt/Money.h"
 
 namespace bookmgmt {
 
-// Question 12: Vendor offer structure inside bookmgmt namespace
+// Question 12: Vendor offer structure
 struct VendorOffer {
     std::string vendorName;
     Money price;
@@ -37,11 +38,25 @@ public:
     Money unitPrice() const { return unitPrice_; }
     void setUnitPrice(Money price);
 
+    // Question 12: Vendor Management
     void addVendorOffer(const std::string& vendorName, Money price) {
         vendorOffers_.push_back({vendorName, price});
     }
 
     const std::vector<VendorOffer>& vendorOffers() const { return vendorOffers_; }
+
+    // STEP 1: Cheapest vendor logic[cite: 3]
+    VendorOffer cheapestVendor() const {
+        if (vendorOffers_.empty()) {
+            return VendorOffer{publisher_, unitPrice_};
+        }
+        auto minIt = std::min_element(
+            vendorOffers_.begin(), vendorOffers_.end(),
+            [](const VendorOffer& a, const VendorOffer& b) {
+                return a.price < b.price;
+            });
+        return *minIt;
+    }
 
     virtual ResourceCategory category() const = 0;
     virtual bool isDigital() const { return false; }

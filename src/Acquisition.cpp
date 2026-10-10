@@ -47,11 +47,12 @@ bool AcquisitionManager::canPurchase(const std::string& id, int quantity,
 
 PurchaseRecord& AcquisitionManager::record(const Resource* r, const std::string& id,
                                            int qty, Money cost, bool approved,
-                                           std::string reason, const std::string& dept) {
+                                           std::string reason, const std::string& dept,
+                                           const std::string& vendor) {
     history_.push_back(PurchaseRecord{
         nextOrderNo_++, id, r ? r->title() : std::string("(unknown)"),
         r ? r->category() : ResourceCategory::Book, qty, cost, approved,
-        std::move(reason), false, dept});
+        std::move(reason), false, dept, vendor});
     return history_.back();
 }
 
@@ -62,11 +63,24 @@ const PurchaseRecord& AcquisitionManager::purchase(const std::string& id, int qu
     }
 
     const Resource& r = catalog_.get(id);
-    const Money cost = r.costFor(quantity);
+    VendorOffer bestOffer = r.cheapestVendor();
+    
+    // Calculate total cost: if vendor offers a special unit price, calculate based on that;
+    // otherwise use resource's costFor logic (which handles taxes/discounts).
+    Money cost;
+    if (!r.vendorOffers().empty()) {
+        cost = bestOffer.price * quantity;
+    } else {
+        cost = r.costFor(quantity);
+    }
+
     b->commit(r.category(), quantity, cost, id);
     catalog_.addHoldings(id, quantity);
-    return record(&r, id, quantity, cost, true, {}, dept);
+    return record(&r, id, quantity, cost, true, {}, dept, bestOffer.vendorName);
 }
+
+
+
 
 std::vector<PurchaseRecord> AcquisitionManager::processBatch(
     const std::vector<PurchaseRequest>& reqs, bool allOrNothing) {
@@ -228,6 +242,7 @@ void AcquisitionManager::printReport(std::ostream& os) const {
         if (!rec.department.empty()) os << " [" << rec.department << "]";
         if (!rec.approved) os << "\n        reason: " << rec.reason;
         if (rec.isCancellation) os << " (" << rec.reason << ")";
+        if (!rec.vendor.empty()) os << " (Vendor: " << rec.vendor << ")";
         os << "\n";
     }
     os << "Total spent: " << totalSpent() << "\n";

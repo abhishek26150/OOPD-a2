@@ -28,6 +28,7 @@ struct PurchaseRecord {
     std::string reason;
     bool isCancellation = false;
     std::string department = ""; // Question 9: Department charged
+    std::string vendor = ""; // Question 12: Vendor used for order
 };
 
 class AcquisitionManager {
@@ -65,9 +66,8 @@ public:
 
 private:
     PurchaseRecord& record(const Resource* r, const std::string& id, int qty,
-                           Money cost, bool approved, std::string reason,
-                           const std::string& dept = "");
-
+                       Money cost, bool approved, std::string reason,
+                       const std::string& dept = "", const std::string& vendor = "");
     Catalog& catalog_;
     Budget& defaultBudget_;
     std::map<std::string, std::shared_ptr<Budget>> deptBudgets_; // Question 9

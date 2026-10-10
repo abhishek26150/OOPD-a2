@@ -190,5 +190,25 @@ std::cout << "\n=== All-or-Nothing Batch Processing (Question 11) ===\n";
     std::cout << "Batch processed with All-or-Nothing=true. Requests count: " << res.size() << "\n";
     std::cout << "Approved: " << (res[0].approved ? "Yes" : "No") << ", Budget spent: " << batchBudget.spent() << "\n";              
 
+
+
+
+    std::cout << "\n=== Vendor Selection (Question 12) ===\n";
+    Catalog vendorCat;
+    vendorCat.emplace<Book>("B001", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(500));
+    
+    Resource* vRes = vendorCat.find("B001");
+    vRes->addVendorOffer("Amazon", Money::of(480));
+    vRes->addVendorOffer("BookDepository", Money::of(420));
+    vRes->addVendorOffer("LocalStore", Money::of(450));
+
+    Budget vendorBudget(Money::of(5000));
+    AcquisitionManager vendorAcq(vendorCat, vendorBudget);
+
+    auto vOrder = vendorAcq.purchase("B001", 1);
+    std::cout << "Purchased B001 from cheapest vendor: " << vOrder.vendor 
+              << " at Price: " << vOrder.cost << "\n";
+              
+
     return 0;
 }

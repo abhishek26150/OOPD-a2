@@ -432,7 +432,26 @@ void test_question_11_all_or_nothing_batch() {
     CHECK(budget.spent() == Money::of(0)); // Nothing bought
     CHECK(cat.holdings("B01") == 0);       // Holdings unchanged
 }
+void test_question_12_vendors() {
+    using namespace bookmgmt;
 
+    Catalog cat;
+    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(500));
+    
+    Resource* r = cat.find("B01");
+    r->addVendorOffer("Vendor A", Money::of(450));
+    r->addVendorOffer("Vendor B (Cheapest)", Money::of(380));
+    r->addVendorOffer("Vendor C", Money::of(480));
+
+    Budget budget(Money::of(5000));
+    AcquisitionManager acq(cat, budget);
+
+    auto order = acq.purchase("B01", 2);
+
+    CHECK(order.approved == true);
+    CHECK(order.vendor == "Vendor B (Cheapest)"); // Auto-selects cheapest vendor
+    CHECK(order.cost == Money::of(760));          // 380 * 2 = 760
+}
 
 int main() {
     testMoney();
@@ -452,6 +471,7 @@ int main() {
     test_question_9_department_budgets();
     test_question_10_year_end_rollover();
     test_question_11_all_or_nothing_batch();
+    test_question_12_vendors();
 
 
     std::cout << (g_checks - g_failures) << "/" << g_checks << " checks passed\n";
