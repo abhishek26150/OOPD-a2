@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iosfwd>
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -12,6 +14,7 @@ namespace bookmgmt {
 struct PurchaseRequest {
     std::string resourceId;
     int quantity;
+    std::string department = ""; // Question 9: Department name
 };
 
 struct PurchaseRecord {
@@ -22,24 +25,38 @@ struct PurchaseRecord {
     int quantity;
     Money cost;
     bool approved;
-    std::string reason;  // why it was rejected; empty if approved
-    bool isCancellation = false; // Question 8: Cancellation record flag
+    std::string reason;
+    bool isCancellation = false;
+    std::string department = ""; // Question 9: Department charged
 };
 
 class AcquisitionManager {
 public:
     AcquisitionManager(Catalog& catalog, Budget& budget);
 
+    // Question 9: Department budget management
+    void addDepartmentBudget(const std::string& dept, std::shared_ptr<Budget> budget) {
+        deptBudgets_[dept] = budget;
+    }
+
+    Budget* getDepartmentBudget(const std::string& dept) const {
+        auto it = deptBudgets_.find(dept);
+        if (it != deptBudgets_.end()) return it->second.get();
+        return nullptr;
+    }
+
     Money quote(const std::string& id, int quantity) const;
 
     bool canPurchase(const std::string& id, int quantity,
                      std::string* reason = nullptr) const;
 
-    const PurchaseRecord& purchase(const std::string& id, int quantity);
+    bool canPurchase(const std::string& id, int quantity, const std::string& dept,
+                     std::string* reason = nullptr) const;
+
+    const PurchaseRecord& purchase(const std::string& id, int quantity, const std::string& dept = "");
 
     std::vector<PurchaseRecord> processBatch(const std::vector<PurchaseRequest>& reqs);
 
-    // Question 8: Order cancellation
     PurchaseRecord cancelOrder(int orderNo);
 
     const std::vector<PurchaseRecord>& history() const { return history_; }
@@ -49,10 +66,12 @@ public:
 
 private:
     PurchaseRecord& record(const Resource* r, const std::string& id, int qty,
-                           Money cost, bool approved, std::string reason);
+                           Money cost, bool approved, std::string reason,
+                           const std::string& dept = "");
 
     Catalog& catalog_;
-    Budget& budget_;
+    Budget& defaultBudget_;
+    std::map<std::string, std::shared_ptr<Budget>> deptBudgets_; // Question 9
     std::vector<PurchaseRecord> history_;
     int nextOrderNo_ = 1;
 };

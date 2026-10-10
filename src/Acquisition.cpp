@@ -10,7 +10,7 @@
 namespace bookmgmt {
 
 AcquisitionManager::AcquisitionManager(Catalog& catalog, Budget& budget)
-    : catalog_(catalog), budget_(budget) {}
+    : catalog_(catalog), defaultBudget_(budget) {}
 
 Money AcquisitionManager::quote(const std::string& id, int quantity) const {
     return catalog_.get(id).costFor(quantity);
@@ -18,12 +18,25 @@ Money AcquisitionManager::quote(const std::string& id, int quantity) const {
 
 bool AcquisitionManager::canPurchase(const std::string& id, int quantity,
                                      std::string* reason) const {
+    return canPurchase(id, quantity, "", reason);
+}
+
+bool AcquisitionManager::canPurchase(const std::string& id, int quantity,
+                                     const std::string& dept, std::string* reason) const {
     std::string why;
+    Budget* b = dept.empty() ? &defaultBudget_ : getDepartmentBudget(dept);
+    
+    if (!b) {
+        why = "Unknown department: " + dept;
+        if (reason) *reason = why;
+        return false;
+    }
+
     if (const Resource* r = catalog_.find(id)) {
         if (quantity <= 0)
             why = "quantity must be positive";
         else
-            why = budget_.check(r->category(), quantity, r->costFor(quantity), id);
+            why = b->check(r->category(), quantity, r->costFor(quantity), id);
     } else {
         why = "resource not found: " + id;
     }
@@ -33,20 +46,25 @@ bool AcquisitionManager::canPurchase(const std::string& id, int quantity,
 
 PurchaseRecord& AcquisitionManager::record(const Resource* r, const std::string& id,
                                            int qty, Money cost, bool approved,
-                                           std::string reason) {
+                                           std::string reason, const std::string& dept) {
     history_.push_back(PurchaseRecord{
         nextOrderNo_++, id, r ? r->title() : std::string("(unknown)"),
         r ? r->category() : ResourceCategory::Book, qty, cost, approved,
-        std::move(reason)});
+        std::move(reason), false, dept});
     return history_.back();
 }
 
-const PurchaseRecord& AcquisitionManager::purchase(const std::string& id, int quantity) {
-    const Resource& r = catalog_.get(id);        // may throw NotFoundError
-    const Money cost = r.costFor(quantity);      // may throw invalid_argument
-    budget_.commit(r.category(), quantity, cost, id);  // may throw quota/budget errors
+const PurchaseRecord& AcquisitionManager::purchase(const std::string& id, int quantity, const std::string& dept) {
+    Budget* b = dept.empty() ? &defaultBudget_ : getDepartmentBudget(dept);
+    if (!b) {
+        throw std::invalid_argument("Unknown department: " + dept);
+    }
+
+    const Resource& r = catalog_.get(id);
+    const Money cost = r.costFor(quantity);
+    b->commit(r.category(), quantity, cost, id);
     catalog_.addHoldings(id, quantity);
-    return record(&r, id, quantity, cost, true, {});
+    return record(&r, id, quantity, cost, true, {}, dept);
 }
 
 std::vector<PurchaseRecord> AcquisitionManager::processBatch(
@@ -57,27 +75,30 @@ std::vector<PurchaseRecord> AcquisitionManager::processBatch(
         const Resource* r = catalog_.find(req.resourceId);
         Money cost;
         std::string why;
-        if (!r) {
+        
+        Budget* b = req.department.empty() ? &defaultBudget_ : getDepartmentBudget(req.department);
+
+        if (!b) {
+            why = "Unknown department: " + req.department;
+        } else if (!r) {
             why = "resource not found: " + req.resourceId;
         } else if (req.quantity <= 0) {
             why = "quantity must be positive";
         } else {
             cost = r->costFor(req.quantity);
-            why = budget_.check(r->category(), req.quantity, cost, req.resourceId);
+            why = b->check(r->category(), req.quantity, cost, req.resourceId);
         }
 
         if (why.empty()) {
-            results.push_back(purchase(req.resourceId, req.quantity));
+            results.push_back(purchase(req.resourceId, req.quantity, req.department));
         } else {
-            results.push_back(record(r, req.resourceId, req.quantity, cost, false, why));
+            results.push_back(record(r, req.resourceId, req.quantity, cost, false, why, req.department));
         }
     }
     return results;
 }
 
-// Question 8: Order Cancellation
 PurchaseRecord AcquisitionManager::cancelOrder(int orderNo) {
-    // 1. Locate original order in history
     PurchaseRecord* orig = nullptr;
     for (auto& rec : history_) {
         if (rec.orderNo == orderNo) {
@@ -98,20 +119,19 @@ PurchaseRecord AcquisitionManager::cancelOrder(int orderNo) {
         throw std::invalid_argument("Cannot cancel a cancellation record");
     }
 
-    // Check if order was already cancelled
     for (const auto& rec : history_) {
         if (rec.isCancellation && rec.reason == "Cancelled #" + std::to_string(orderNo)) {
             throw std::invalid_argument("Order #" + std::to_string(orderNo) + " is already cancelled");
         }
     }
 
-    // 2. Reduce holdings in catalog
     catalog_.addHoldings(orig->resourceId, -orig->quantity);
 
-    // 3. Refund budget and quota
-    budget_.refund(orig->category, orig->quantity, orig->cost, orig->resourceId);
+    Budget* b = orig->department.empty() ? &defaultBudget_ : getDepartmentBudget(orig->department);
+    if (b) {
+        b->refund(orig->category, orig->quantity, orig->cost, orig->resourceId);
+    }
 
-    // 4. Record cancellation entry in history
     PurchaseRecord cancelRec;
     cancelRec.orderNo = nextOrderNo_++;
     cancelRec.resourceId = orig->resourceId;
@@ -120,6 +140,7 @@ PurchaseRecord AcquisitionManager::cancelOrder(int orderNo) {
     cancelRec.quantity = -orig->quantity;
     cancelRec.cost = Money::of(0) - orig->cost;
     cancelRec.approved = true;
+    cancelRec.department = orig->department;
 
     std::ostringstream ss;
     ss << "Cancelled #" << orderNo;
@@ -145,6 +166,7 @@ void AcquisitionManager::printReport(std::ostream& os) const {
            << rec.resourceId << " x" << std::setw(3) << rec.quantity << " "
            << std::setw(12) << std::right << rec.cost.toString() << std::left << "  "
            << rec.title;
+        if (!rec.department.empty()) os << " [" << rec.department << "]";
         if (!rec.approved) os << "\n        reason: " << rec.reason;
         if (rec.isCancellation) os << " (" << rec.reason << ")";
         os << "\n";

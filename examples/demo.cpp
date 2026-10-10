@@ -147,5 +147,23 @@ std::cout << "\n=== Title Limit Quota (Question 7) ===\n";
 
     cancelAcq.cancelOrder(ord.orderNo);
     std::cout << "After Cancelling Order #" << ord.orderNo << ": Spent: " << cancelBudget.spent() << ", Holdings: " << cancelCat.holdings("B999") << "\n";
+
+    std::cout << "\n=== Department Budgets (Question 9) ===\n";
+    Catalog deptCat;
+    deptCat.emplace<Book>("B001", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(450));
+    
+    Budget mainB(Money::of(20000));
+    AcquisitionManager deptAcq(deptCat, mainB);
+
+    auto csB = std::make_shared<Budget>(Money::of(2000));
+    csB->setQuota(ResourceCategory::Book, Quota{3, Money::of(1500)});
+    deptAcq.addDepartmentBudget("Computer Science", csB);
+
+    auto ordDept = deptAcq.purchase("B001", 2, "Computer Science");
+    std::cout << "Charged " << ordDept.quantity << " copies of " << ordDept.resourceId 
+              << " to [" << ordDept.department << "]. Dept Spent: " << csB->spent() << "\n";
+
+
+
     return 0;
 }

@@ -358,7 +358,32 @@ void test_question_8_cancellation() {
     CHECK(acq.history().size() == 2);
 }
 
+void test_question_9_department_budgets() {
+    using namespace bookmgmt;
 
+    Catalog cat;
+    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(500));
+    
+    Budget mainBudget(Money::of(10000));
+    AcquisitionManager acq(cat, mainBudget);
+
+    auto csBudget = std::make_shared<Budget>(Money::of(1000));
+    csBudget->setQuota(ResourceCategory::Book, Quota{2, Money::of(1000)});
+    
+    acq.addDepartmentBudget("CS", csBudget);
+
+    // Buy 1 copy for CS department -> Approved
+    auto order1 = acq.purchase("B01", 1, "CS");
+    CHECK(order1.approved == true);
+    CHECK(order1.department == "CS");
+    CHECK(csBudget->spent() == Money::of(500));
+
+    // Exceed CS department quota (buying 2 more = 3 total, max 2 allowed)
+    std::string reason;
+    bool can = acq.canPurchase("B01", 2, "CS", &reason);
+    CHECK(can == false);
+    CHECK(reason.find("unit quota exceeded") != std::string::npos);
+}
 
 int main() {
     testMoney();
