@@ -177,5 +177,18 @@ std::cout << "\n=== Title Limit Quota (Question 7) ===\n";
               << ", Spent " << budget2026.spent() << ", Remaining " << budget2026.remaining() << "\n";          
 
 
+std::cout << "\n=== All-or-Nothing Batch Processing (Question 11) ===\n";
+    Catalog batchCat;
+    batchCat.emplace<Book>("B1", "Book 1", std::vector<std::string>{"A"}, "111", "Pub", 2020, Money::of(300));
+    batchCat.emplace<Book>("B2", "Book 2", std::vector<std::string>{"B"}, "222", "Pub", 2021, Money::of(800));
+    Budget batchBudget(Money::of(1000));
+    AcquisitionManager batchAcq(batchCat, batchBudget);
+
+    std::vector<PurchaseRequest> reqs = { {"B1", 1}, {"B2", 1} }; // 300 + 800 = 1100 > 1000
+    auto res = batchAcq.processBatch(reqs, true);
+
+    std::cout << "Batch processed with All-or-Nothing=true. Requests count: " << res.size() << "\n";
+    std::cout << "Approved: " << (res[0].approved ? "Yes" : "No") << ", Budget spent: " << batchBudget.spent() << "\n";              
+
     return 0;
 }

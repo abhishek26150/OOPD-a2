@@ -55,8 +55,7 @@ public:
 
     const PurchaseRecord& purchase(const std::string& id, int quantity, const std::string& dept = "");
 
-    std::vector<PurchaseRecord> processBatch(const std::vector<PurchaseRequest>& reqs);
-
+    std::vector<PurchaseRecord> processBatch(const std::vector<PurchaseRequest>& reqs, bool allOrNothing = false);
     PurchaseRecord cancelOrder(int orderNo);
 
     const std::vector<PurchaseRecord>& history() const { return history_; }

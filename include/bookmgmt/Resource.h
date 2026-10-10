@@ -5,10 +5,17 @@
 
 #include <iosfwd>
 #include <string>
+#include <vector>
 
 #include "bookmgmt/Money.h"
 
 namespace bookmgmt {
+
+// Question 12: Vendor offer structure inside bookmgmt namespace
+struct VendorOffer {
+    std::string vendorName;
+    Money price;
+};
 
 enum class ResourceCategory { Book, ElectronicResource, Journal, EBook, AudioBook, Thesis };
 
@@ -30,6 +37,12 @@ public:
     Money unitPrice() const { return unitPrice_; }
     void setUnitPrice(Money price);
 
+    void addVendorOffer(const std::string& vendorName, Money price) {
+        vendorOffers_.push_back({vendorName, price});
+    }
+
+    const std::vector<VendorOffer>& vendorOffers() const { return vendorOffers_; }
+
     virtual ResourceCategory category() const = 0;
     virtual bool isDigital() const { return false; }
 
@@ -48,6 +61,7 @@ private:
     std::string publisher_;
     int year_;
     Money unitPrice_;
+    std::vector<VendorOffer> vendorOffers_;
 };
 
 std::ostream& operator<<(std::ostream& os, const Resource& r);

@@ -1,6 +1,7 @@
 #include "bookmgmt/Acquisition.h"
 
 #include <iomanip>
+#include <map>
 #include <ostream>
 #include <sstream>
 #include <stdexcept>
@@ -68,7 +69,65 @@ const PurchaseRecord& AcquisitionManager::purchase(const std::string& id, int qu
 }
 
 std::vector<PurchaseRecord> AcquisitionManager::processBatch(
-    const std::vector<PurchaseRequest>& reqs) {
+    const std::vector<PurchaseRequest>& reqs, bool allOrNothing) {
+    
+    if (allOrNothing) {
+        // Step 1: Simulate cumulative budget/quota usage
+        bool batchValid = true;
+        std::map<ResourceCategory, int> batchUnits;
+        std::map<ResourceCategory, Money> batchCosts;
+
+        for (const auto& req : reqs) {
+            std::string why;
+            const Resource* r = catalog_.find(req.resourceId);
+            Budget* b = req.department.empty() ? &defaultBudget_ : getDepartmentBudget(req.department);
+
+            if (!b) {
+                why = "Unknown department: " + req.department;
+                batchValid = false;
+            } else if (!r) {
+                why = "resource not found: " + req.resourceId;
+                batchValid = false;
+            } else if (req.quantity <= 0) {
+                why = "quantity must be positive";
+                batchValid = false;
+            } else {
+                Money cost = r->costFor(req.quantity);
+                Money currentSimCost = batchCosts[r->category()];
+                
+                // Check if adding this item breaks total remaining budget
+                if (b->spent() + currentSimCost + cost > b->total()) {
+                    why = "Batch total exceeds overall budget";
+                    batchValid = false;
+                } else {
+                    why = b->check(r->category(), req.quantity, cost, req.resourceId);
+                    if (!why.empty()) batchValid = false;
+                }
+
+                if (why.empty()) {
+                    batchUnits[r->category()] += req.quantity;
+                    batchCosts[r->category()] += cost;
+                }
+            }
+
+            if (!batchValid) break;
+        }
+
+        // If any request failed in dry-run, abort all items
+        if (!batchValid) {
+            std::vector<PurchaseRecord> failedResults;
+            failedResults.reserve(reqs.size());
+            for (const auto& r : reqs) {
+                const Resource* res = catalog_.find(r.resourceId);
+                Money cost = res ? res->costFor(r.quantity) : Money::of(0);
+                failedResults.push_back(record(res, r.resourceId, r.quantity, cost, false,
+                    "Batch aborted: All-or-Nothing restriction triggered", r.department));
+            }
+            return failedResults;
+        }
+    }
+
+    // Step 2: Safe execution of batch
     std::vector<PurchaseRecord> results;
     results.reserve(reqs.size());
     for (const auto& req : reqs) {

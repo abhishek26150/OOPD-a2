@@ -407,6 +407,33 @@ void test_question_10_year_end_rollover() {
     CHECK(q->maxUnits == 5);
 }
 
+
+void test_question_11_all_or_nothing_batch() {
+    using namespace bookmgmt;
+
+    Catalog cat;
+    cat.emplace<Book>("B01", "Clean Code", std::vector<std::string>{"Martin"}, "123", "Prentice", 2008, Money::of(400));
+    cat.emplace<Book>("B02", "Design Patterns", std::vector<std::string>{"GoF"}, "456", "Addison", 1994, Money::of(700));
+    
+    Budget budget(Money::of(1000)); // Total 1000 budget
+    AcquisitionManager acq(cat, budget);
+
+    std::vector<PurchaseRequest> batch = {
+        {"B01", 1}, // Cost 400 (Valid)
+        {"B02", 1}  // Cost 700 (400 + 700 = 1100 > 1000 Budget)
+    };
+
+    // processBatch with allOrNothing = true
+    auto results = acq.processBatch(batch, true);
+
+    CHECK(results.size() == 2);
+    CHECK(results[0].approved == false);
+    CHECK(results[1].approved == false);
+    CHECK(budget.spent() == Money::of(0)); // Nothing bought
+    CHECK(cat.holdings("B01") == 0);       // Holdings unchanged
+}
+
+
 int main() {
     testMoney();
     testResourcesAndCost();
@@ -424,6 +451,7 @@ int main() {
     test_question_8_cancellation();
     test_question_9_department_budgets();
     test_question_10_year_end_rollover();
+    test_question_11_all_or_nothing_batch();
 
 
     std::cout << (g_checks - g_failures) << "/" << g_checks << " checks passed\n";
